@@ -19,53 +19,64 @@ types <- c("Barres"='geom_bar()',
 # UI ####
 
 ui <- fluidPage(
-  navbarPage(title = "Explorateur de données", # Titre de l'application
-             # Premier onglet
-             tabPanel(title = "Graph - une variable",
-                      br(),
-                      sidebarLayout(
-                        sidebarPanel(width = 3,
-                          fileInput(inputId = "file", 
-                                    label = "Importer un fichier",
-                                    buttonLabel = "Parcourir...",
-                                    placeholder = "Pas de fichier selectionné"),
-                          selectInput(inputId = "var1",
-                                      label = "Choisir une variable",
-                                      choices = colnames(mpg),
-                                      selected = "qsec"),
-                          selectInput(inputId = "gtype",
-                                      label = "Type de graph",
-                                      choices = types)
-                        ),
-                        mainPanel(width = 9,
-                          plotlyOutput("graph1"),
-                          br(),
-                          fluidRow(
-                            column(width = 4,
-                                   textOutput("number_of_levels"),
-                                   br(),
-                                   tableOutput("factors"),
-                                   br()),
-                            column(width = 8,
-                                   tags$p("Structure de la variable selectionnee :"),
-                                   verbatimTextOutput("structure"),
-                                   br(),
-                                   tags$p("Résumé des variables du jeu de données :"),
-                                   verbatimTextOutput("summary"))
-                          )
-                        )
-                      )
-             ),
-             # Deuxième onlet
-             tabPanel(title = "Graph - deux variables",
-                      tags$p("Graphique avec deux variables prévu ici.")
-             ),
-             # Troisième onglet
-             tabPanel(title = "Table de données",
-                      dataTableOutput("table")
-             )
+ 
+  titlePanel("Explorateur de données"),
+  sidebarLayout(
+        sidebarPanel(width = 3,
+          fileInput(inputId = "file", 
+                    label = "Importer un fichier",
+                    buttonLabel = "Parcourir...",
+                    placeholder = "Pas de fichier selectionné"),
+          
+          selectInput(inputId = "gtype",
+                      label = "Type de graph",
+                      choices = types)
+        ),
+        mainPanel(width = 9,
+            fluidRow(
+              column(width = 4,
+                selectInput(inputId = "var1",
+                            label = "Variable 1",
+                            choices = colnames(mpg),
+                            selected = "qsec")
+              ),
+              column(width=4,
+                checkboxInput(inputId="Presence_var2",
+                              label="Variable 2"),
+                selectInput(inputId = "var2",
+                            label = "Variable 2",
+                            choices = colnames(mpg),
+                            selected = "qsec")
+              ),
+              column(width=4,
+                checkboxInput(inputId="Presence_var2",
+                                  label="Variable 2"),
+                selectInput(inputId = "var3",
+                             label = "Variable 3",
+                             choices = colnames(mpg),
+                             selected = "qsec")
+              )
+            ),
+          plotlyOutput("graph1"),
+          br(),
+          fluidRow(
+            column(width = 4,
+                   textOutput("number_of_levels"),
+                   br(),
+                   tableOutput("factors"),
+                   br()),
+            column(width = 8,
+                   tags$p("Structure de la variable selectionnee :"),
+                   verbatimTextOutput("structure"),
+                   br(),
+                   tags$p("Résumé des variables du jeu de données :"),
+                   verbatimTextOutput("summary"))
+          )
+        )
+                      
   )
 )
+  
 
 # Serveur ####
 server <- function(input, output, session) {
