@@ -80,7 +80,7 @@ ui <- fluidPage(
   
 
 # Serveur ####
-server <- function(input, output, session) {
+server <- function(input, output) {
   variable <- reactive({
     paste("mpg$", input$var1) %>% parse(text=.) %>% eval()
   })
