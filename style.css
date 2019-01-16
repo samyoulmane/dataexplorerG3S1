@@ -16,4 +16,5 @@ label[for="var1-selectized"] {
 #variables_selector {
   display: flex;
   justify-content: space-between;
+  background-color: cyan;
 }
