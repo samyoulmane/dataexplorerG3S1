@@ -3,3 +3,7 @@
 h2 {
   text-align: center;
 }
+
+.checkbox span {
+  font-weight: bold;
+}
