@@ -16,6 +16,10 @@ types <- c("Barres"='geom_bar()',
 
 # Fonctions ####
 
+# Header ####
+
+tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "style.css"))
+
 # UI ####
 
 ui <- fluidPage(
