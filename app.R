@@ -36,31 +36,31 @@ ui <- fluidPage(
                       label = "Type de graph",
                       choices = types)
         ),
-        mainPanel(width = 9,
-            fluidRow(
-              column(width = 4,
-                selectInput(inputId = "var1",
-                            label = "Variable 1",
-                            choices = colnames(mpg),
-                            selected = "qsec")
+       mainPanel(width = 9,
+              fluidRow(
+                column(width = 4,
+                       selectInput(inputId = "var1",
+                                   label = "Variable 1",
+                                   choices = colnames(mpg),
+                                   selected = "qsec")
+                ),
+                column(width=4,
+                       checkboxInput(inputId="Presence_var2",
+                                     label="Variable 2"),
+                       selectInput(inputId = "var2",
+                                   label = NULL,
+                                   choices = colnames(mpg),
+                                   selected = "qsec")
+                ),
+                column(width=4,
+                       checkboxInput(inputId="Presence_var3",
+                                     label="Variable 3"),
+                       selectInput(inputId = "var3",
+                                   label= NULL,
+                                   choices = colnames(mpg),
+                                   selected = "qsec")
+                )
               ),
-              column(width=4,
-                checkboxInput(inputId="Presence_var2",
-                              label="Variable 2"),
-                selectInput(inputId = "var2",
-                            label = "Variable 2",
-                            choices = colnames(mpg),
-                            selected = "qsec")
-              ),
-              column(width=4,
-                checkboxInput(inputId="Presence_var2",
-                                  label="Variable 2"),
-                selectInput(inputId = "var3",
-                             label = "Variable 3",
-                             choices = colnames(mpg),
-                             selected = "qsec")
-              )
-            ),
           plotlyOutput("graph1"),
           br(),
           fluidRow(
