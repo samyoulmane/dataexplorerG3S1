@@ -1,6 +1,6 @@
 # UI pour l'application Explorateur de données
 
-# Source du script
+# Source du script commun
 source(file = "script.R")
 
 # UI
@@ -15,60 +15,44 @@ shinyUI(fluidPage(
                            label = "Importer un fichier",
                            buttonLabel = "Parcourir...",
                            placeholder = "Pas de fichier selectionné"),
-                 
                  selectInput(inputId = "gtype",
                              label = "Type de graph",
                              choices = types)
-    ),
+    ), # fin de sidebarPanel
     mainPanel(width = 9,
-              fluidRow(
-                column(width = 4,
-                       selectInput(inputId = "var1",
-                                   label = "Variable 1",
-                                   choices = colnames(mpg),
-                                   selected = "qsec")
-                ),
+              wellPanel(flowLayout(id = "variables_selector", # Panel de selection des variables
+                div(
+                  selectInput(inputId = "var1",
+                              label = "Variable 1",
+                              choices = colnames(mpg))
+                ), # fin de variable 1
                 
-                column(width=4,
-                       checkboxInput(inputId="Presence_var2",
-                                     label="Variable 2"),
-                       conditionalPanel(condition = "input.Presence_var2 == true",
-                                        selectInput(inputId = "var2",
-                                                    label = NULL,
-                                                    choices = colnames(mpg),
-                                                    selected = "qsec"))
-                ),
+                div(
+                  checkboxInput(inputId="presence_var2",
+                                label="Variable 2"),
+                  conditionalPanel(condition = "input.presence_var2 == true",
+                                   selectInput(inputId = "var2",
+                                               label = NULL,
+                                               choices = colnames(mpg)))
+                ), # fin de variable 2
                 
-                
-                column(width=4,
-                       conditionalPanel(condition = "input.Presence_var2 == true",
-                                        checkboxInput(inputId="Presence_var3",
-                                                      label="Variable 3"),
-                                        conditionalPanel(condition = "input.Presence_var3 == true",
-                                                         selectInput(inputId = "var3",
-                                                                     label= NULL,
-                                                                     choices = colnames(mpg),
-                                                                     selected = "qsec")
-                                        )
-                       )
-                )
-              ),
+                div(
+                  conditionalPanel(condition = "input.presence_var2 == true",
+                                   checkboxInput(inputId="presence_var3",
+                                                 label="Variable 3"),
+                                   conditionalPanel(condition = "input.presence_var3 == true",
+                                                    selectInput(inputId = "var3",
+                                                                label= NULL,
+                                                                choices = colnames(mpg))))
+                ) # fin de variable 3 - last
+              )), # fin de flowLayout
               plotlyOutput("graph1"),
               br(),
-              fluidRow(
-                column(width = 4,
-                       textOutput("number_of_levels"),
-                       br(),
-                       tableOutput("factors"),
-                       br()),
-                column(width = 8,
-                       tags$p("Structure de la variable selectionnee :"),
-                       verbatimTextOutput("structure"),
-                       br(),
-                       tags$p("Résumé des variables du jeu de données :"),
-                       verbatimTextOutput("summary"))
-              )
-    )
+              textOutput("number_of_levels"),
+              br(),
+              tags$p("Résumé des variables du jeu de données :"),
+              verbatimTextOutput("summary")
+    ) # fin de mainPanel
+  ) # fin de sidebarLayout
     
-  )
-))
+)) # fin de fluidPage

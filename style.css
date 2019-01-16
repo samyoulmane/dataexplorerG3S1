@@ -7,3 +7,13 @@ h2 {
 .checkbox span {
   font-weight: bold;
 }
+
+label[for="var1-selectized"] {
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+#variables_selector {
+  display: flex;
+  justify-content: space-between;
+}

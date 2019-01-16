@@ -15,3 +15,12 @@ types <- c("Barres"='geom_bar()',
            "Histogramme"='geom_histogram(stat = "count")')
 
 # Fonctions ####
+
+
+# Options_barres <- 
+
+#O ptions_Aire
+
+# paste0("conditionalPanel(condition = 'input.gtype == ", input$gtype, "')")
+
+  

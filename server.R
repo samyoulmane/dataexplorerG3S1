@@ -9,19 +9,11 @@ shinyServer(function(input, output) {
   variable <- reactive({
     paste("mpg$", input$var1) %>% parse(text=.) %>% eval()
   })
-  output$structure <- renderPrint({
-    str(variable())
-  })
   output$number_of_levels <- renderText({
     t <- paste("Il y a",
                factor(variable()) %>% levels() %>% length(),
                "categories pour la variable selectionnee.")
     t
-  })
-  output$factors <- renderTable({
-    dt <- data.frame(table(variable())) %>% 
-      `colnames<-`(c(input$var1, "Frequence"))
-    dt
   })
   output$summary <- renderPrint({
     summary(mpg)
@@ -34,5 +26,5 @@ shinyServer(function(input, output) {
   output$table <- renderDataTable({
     datatable(mpg)
   })
-  
+
 })
