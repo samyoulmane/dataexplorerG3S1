@@ -21,6 +21,7 @@ types <- c("Barres"='geom_bar()',
 ui <- fluidPage(
   includeCSS("style.css"),         
   titlePanel("Explorateur de données"),
+  hr(),
   sidebarLayout(
         sidebarPanel(width = 3,
           fileInput(inputId = "file", 
