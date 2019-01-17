@@ -1,5 +1,5 @@
 # Script pou définir les éléments commun à l'UI et au serveur
-
+Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
 # Packages ####
 
 library(shiny)
@@ -15,11 +15,11 @@ library(stringr)
 # – Options du graphique ####
 
 # Vecteur avec les types de graphiques pour une variable
-types_onevar <- c("Barres"='geom_bar',
+types_onevar <- c("Histogramme"='geom_histogram',
+                  "Barres"='geom_bar',
                   "Aire"='geom_area',
                   "Densite de Gauss"='geom_density',
-                  "Polygone des frequences"='geom_freqpoly',
-                  "Histogramme"='geom_histogram')
+                  "Polygone des frequences"='geom_freqpoly')
 
 # Options avec à utiliser avec le panel selectInput
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel")
@@ -36,6 +36,11 @@ options_graph <- c("alpha = input$alpha, stat = input$stat, linetype = input$lin
 
 # Fonctions ####
 
+var_type <- function (var) {
+  paste0("output$", var, "_type <- renderText({typeof(", var,"())})") %>% 
+    parse(text=.)
+}
+
 # – Fonctions relatives au graphique ####
 
 # Retourne un panel en fonction du type d'option
@@ -50,22 +55,22 @@ option_to_add <- function (option) {
   
   # Text options
   if (option == "stat") {
-    b <- "choices = c('count', 'bin'))"
+    b <- "choices = c('count', 'bin')"
   }
   if (option == "kernel") {
-    b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine"))'
+    b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine")'
   }
   
   if (option == "linetype") {
-    b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))'
+    b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
   }
   
   # Numeric options
   if (option == "alpha") {
-    b <- "value = 1, min = 0, max = 1, step = 0.1)"
+    b <- "value = 1, min = 0, max = 1, step = 0.1"
   }
   
-  return(eval(paste(panel_option_to_add(option),b) %>% parse(text = .)))
+  return(eval(paste(panel_option_to_add(option),b,")") %>% parse(text = .)))
 }
 
 # Retourne le type de graph à afficher avec les options
@@ -74,5 +79,14 @@ graph_type <- function (type) {
     options_graph <- gsub("stat = input$stat", "kernel = input$kernel", options_graph, fixed = T)
   }
   return(paste0(type, '(', options_graph, ')'))
+}
+
+# Retourne les abscisses ordonées (pour graph à une variable uniquement)
+graph_aes <- function (var, disc = F) {
+  if (is.character(var)|disc) {
+    return(aes(x=reorder(x = var, X = var, FUN= function(x)-length(x))))
+  } else {
+    return(aes(x=var))
+  }
 }
   
