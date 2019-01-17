@@ -16,10 +16,12 @@ shinyUI(fluidPage(
                              label = "Type de graph",
                              choices = types),
                  inputPanel(h5("OPTIONS"),
-                            option_to_add("stat"),
-                            option_to_add("alpha"),
                             conditionalPanel(condition = "input.gtype == 'geom_density'",
-                                             option_to_add("kernel"))
+                                             option_to_add("kernel")),
+                            conditionalPanel(condition = "input.gtype != 'geom_density'",
+                                             option_to_add("stat")),
+                            option_to_add("alpha"),
+                            option_to_add("linetype")
                             )
     ), # fin de sidebarPanel
     mainPanel(width = 9,

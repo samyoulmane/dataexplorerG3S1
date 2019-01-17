@@ -18,12 +18,11 @@ types <- c("Barres"='geom_bar',
 
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel")
 
-options_slider <- c("alpha", "size", "stroke")
+options_slider <- c("alpha", "size", "lower", "middle", "upper", "ymax", "ymin")
 
 options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
 
-options_graph <- c("alpha = as.numeric(input$alpha)",
-                   "stat = input$stat")
+options_graph <- c("alpha = input$alpha, stat = input$stat, linetype = input$linetype")
 
 # Fonctions ####
 
@@ -35,6 +34,7 @@ panel_option_to_add <- function (option) {
 
 option_to_add <- function (option) {
   
+  # Text options
   if (option == "stat") {
     b <- "choices = c('count', 'bin'))"
   }
@@ -42,21 +42,22 @@ option_to_add <- function (option) {
     b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine"))'
   }
   
+  if (option == "linetype") {
+    b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash"))'
+  }
+  
+  # Numeric options
   if (option == "alpha") {
-    b <- "value = 0.5, min = 0, max = 1, step = 0.1)"
+    b <- "value = 1, min = 0, max = 1, step = 0.1)"
   }
   
   return(eval(paste(panel_option_to_add(option),b) %>% parse(text = .)))
 }
 
-graph_type <- function(type) {
-  if (type == "geom_density") { # Condition mise dans la fonction pour répondre à la réactivité
-    append(options_graph, "kernel = input$kernel")
+graph_type <- function (type) {
+  if (type == "geom_density") {
+    options_graph <- gsub("stat = input$stat", "kernel = input$kernel", options_graph, fixed = T)
   }
   return(paste0(type, '(', options_graph, ')'))
 }
-  
-
-
-#(paste0(input$gtype, '(', 'alpha=', input$alpha,')' %>% parse(text=.) %>% eval())
   
