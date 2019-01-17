@@ -1,8 +1,5 @@
 # UI pour l'application Explorateur de données
 
-# Source du script commun
-source(file = "script.R")
-
 # UI
 
 shinyUI(fluidPage(
@@ -17,7 +14,13 @@ shinyUI(fluidPage(
                            placeholder = "Pas de fichier selectionné"),
                  selectInput(inputId = "gtype",
                              label = "Type de graph",
-                             choices = types)
+                             choices = types),
+                 inputPanel(h5("OPTIONS"),
+                            option_to_add("stat"),
+                            option_to_add("alpha"),
+                            conditionalPanel(condition = "input.gtype == 'geom_density'",
+                                             option_to_add("kernel"))
+                            )
     ), # fin de sidebarPanel
     mainPanel(width = 9,
               wellPanel(flowLayout(id = "variables_selector", # Panel de selection des variables
