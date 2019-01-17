@@ -3,10 +3,10 @@
 # UI
 
 shinyUI(fluidPage(
-  includeCSS("style.css"),         
+  includeCSS("style.css"),
   titlePanel("Explorateur de données"),
   hr(),
-  sidebarLayout(
+  sidebarLayout( # Sidebar ####
     sidebarPanel(width = 3,
                  fileInput(inputId = "file", 
                            label = "Importer un fichier",
@@ -14,8 +14,8 @@ shinyUI(fluidPage(
                            placeholder = "Pas de fichier selectionné"),
                  selectInput(inputId = "gtype",
                              label = "Type de graph",
-                             choices = types),
-                 inputPanel(h5("OPTIONS"),
+                             choices = types_onevar),
+                 inputPanel(h5("OPTIONS"), # – Options du graph ####
                             conditionalPanel(condition = "input.gtype == 'geom_density'",
                                              option_to_add("kernel")),
                             conditionalPanel(condition = "input.gtype != 'geom_density'",
@@ -24,17 +24,17 @@ shinyUI(fluidPage(
                             option_to_add("linetype")
                             )
     ), # fin de sidebarPanel
-    mainPanel(width = 9,
-              wellPanel(flowLayout(id = "variables_selector", # Panel de selection des variables
+    mainPanel(width = 9, # mainPanel ####
+              wellPanel(flowLayout(id = "variables_selector", # – Panel de selection des variables ####
                 div(
                   selectInput(inputId = "var1",
-                              label = "Variable 1",
+                              label = "Variable 1 - X",
                               choices = colnames(mpg))
                 ), # fin de variable 1
                 
                 div(
                   checkboxInput(inputId="presence_var2",
-                                label="Variable 2"),
+                                label="Variable 2 - Y"),
                   conditionalPanel(condition = "input.presence_var2 == true",
                                    selectInput(inputId = "var2",
                                                label = NULL,
@@ -44,13 +44,16 @@ shinyUI(fluidPage(
                 div(
                   conditionalPanel(condition = "input.presence_var2 == true",
                                    checkboxInput(inputId="presence_var3",
-                                                 label="Variable 3"),
+                                                 label="Variable 3 - couleur"),
                                    conditionalPanel(condition = "input.presence_var3 == true",
                                                     selectInput(inputId = "var3",
                                                                 label= NULL,
                                                                 choices = colnames(mpg))))
                 ) # fin de variable 3 - last
               )), # fin de flowLayout
+              
+              # – Outputs ####
+              
               plotlyOutput("graph1"),
               br(),
               textOutput("number_of_levels"),
