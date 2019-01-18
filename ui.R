@@ -7,7 +7,7 @@ shinyUI(fluidPage(
   titlePanel("Explorateur de données"),
   hr(),
   conditionalPanel("output.confirmation == ''",
-                   wellPanel(fileInput(inputId = "file", 
+                   wellPanel(fileInput(inputId = "file_be", 
                                        label = "Veuillez importer un jeu de données",
                                        buttonLabel = "Parcourir...",
                                        placeholder = "Pas de fichier selectionné"),
@@ -16,10 +16,10 @@ shinyUI(fluidPage(
                   ),
   conditionalPanel("output.confirmation !== ''", sidebarLayout( # Sidebar ####
     sidebarPanel(width = 3,
-                 fileInput(inputId = "file", 
+                 fileInput(inputId = "file_af", 
                            label = "Importer un autre fichier",
                            buttonLabel = "Parcourir...",
-                           placeholder = "Pas de fichier selectionné"),
+                           placeholder = "Pas d'autre fichier selectionné"),
                  selectInput(inputId = "gtype",
                              label = "Type de graph",
                              choices = types_onevar),
@@ -28,6 +28,7 @@ shinyUI(fluidPage(
                                              option_to_add("kernel")),
                             conditionalPanel(condition = "input.gtype != 'geom_density'",
                                              option_to_add("stat")),
+                            option_to_add("theme"),
                             option_to_add("alpha"),
                             option_to_add("linetype")
                             )
@@ -37,9 +38,10 @@ shinyUI(fluidPage(
                 div(
                   selectInput(inputId = "var1",
                               label = "Variable 1 - X",
-                              choices = c("Pas de données")),
-                  conditionalPanel(condition = "output.var1_type == 'integer'",
-                                   checkboxInput(inputId = "disc_var1", label = "Disrète"))
+                              choices = c()),
+                  conditionalPanel("output.var1_type != 'character' || output.var1_type != 'factor'",
+                                   checkboxInput(inputId = "disc_var1", label = "Disrète")
+                                   )
                 ), # fin de variable 1
                 
                 div(
@@ -48,7 +50,7 @@ shinyUI(fluidPage(
                   conditionalPanel(condition = "input.presence_var2 == true",
                                    selectInput(inputId = "var2",
                                                label = NULL,
-                                               choices = if (exists("data_set")) {colnames(data_set)} else {c()}))
+                                               choices = c()))
                 ), # fin de variable 2
                 
                 div(
@@ -58,15 +60,12 @@ shinyUI(fluidPage(
                                    conditionalPanel(condition = "input.presence_var3 == true",
                                                     selectInput(inputId = "var3",
                                                                 label= NULL,
-                                                                choices = if (exists("data_set")) {colnames(data_set)} else {c()})))
+                                                                choices = c())))
                 ) # fin de variable 3 - last
               )), # fin de flowLayout
               
               # – Outputs ####
               plotlyOutput("graph1"),
-              conditionalPanel("output.var1_type == 'character' || input.disc_var1 == true",
-                               br(),
-                               textOutput("number_of_levels")),
               br(),
               tags$p("Résumé des variables du jeu de données :"),
               verbatimTextOutput("summary"),
