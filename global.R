@@ -17,7 +17,7 @@ library(stringr)
 types_onevar <- c("Histogramme"='geom_histogram',
                   "Barres"='geom_bar',
                   "Aire"='geom_area',
-                  "Densite de Gauss"='geom_density',
+                  "Densite"='geom_density',
                   "Polygone des frequences"='geom_freqpoly')
 
 # Options avec à utiliser avec le panel selectInput

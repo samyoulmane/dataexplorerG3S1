@@ -40,7 +40,7 @@ shinyUI(fluidPage(
                 div(
                   checkboxInput(inputId="presence_var2", label="Variable 2 - Y"),
                   conditionalPanel(condition = "input.presence_var2 == true",
-                                   selectInput(inputId = "var2", label = NULL, hoices = c()),
+                                   selectInput(inputId = "var2", label = NULL, choices = c()),
                                    conditionalPanel("output.var2_type != 'factor'",
                                                     checkboxInput(inputId = "disc_var2", label = "Disrète")))
                 ), # fin de variable 2
