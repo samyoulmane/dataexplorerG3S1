@@ -36,37 +36,27 @@ shinyUI(fluidPage(
     mainPanel(width = 9, # mainPanel ####
               wellPanel(flowLayout(id = "variables_selector", # – Panel de selection des variables ####
                 div(
-                  selectInput(inputId = "var1",
-                              label = "Variable 1 - X",
-                              choices = c()),
+                  selectInput(inputId = "var1", label = "Variable 1 - X", choices = c()),
                   conditionalPanel("output.var1_type != 'factor'",
-                                   checkboxInput(inputId = "disc_var1", label = "Disrète")
-                                   )
+                                   checkboxInput(inputId = "disc_var1", label = "Disrète"))
                 ), # fin de variable 1
-                
                 div(
-                  checkboxInput(inputId="presence_var2",
-                                label="Variable 2 - Y"),
+                  checkboxInput(inputId="presence_var2", label="Variable 2 - Y"),
                   conditionalPanel(condition = "input.presence_var2 == true",
-                                   selectInput(inputId = "var2",
-                                               label = NULL,
-                                               choices = c()),
+                                   selectInput(inputId = "var2", label = NULL, hoices = c()),
                                    conditionalPanel("output.var2_type != 'factor'",
-                                                    checkboxInput(inputId = "disc_var2", label = "Disrète")
-                                   ))
+                                                    checkboxInput(inputId = "disc_var2", label = "Disrète")))
                 ), # fin de variable 2
                 
                 div(
                   conditionalPanel(condition = "input.presence_var2 == true",
-                                   checkboxInput(inputId="presence_var3",
-                                                 label="Variable 3 - couleur"),
+                                   checkboxInput(inputId="presence_var3",label="Variable 3 - couleur"),
                                    conditionalPanel(condition = "input.presence_var3 == true",
-                                                    selectInput(inputId = "var3",
-                                                                label= NULL,
-                                                                choices = c()),
+                                                    selectInput(inputId = "var3", label= NULL, choices = c()),
                                                     conditionalPanel("output.var3_type != 'factor'",
-                                                                     checkboxInput(inputId = "disc_var3", label = "Disrète")
-                                                    )))
+                                                                     checkboxInput(inputId = "disc_var3", label = "Disrète"))
+                                                   ) # fin du deuxième conditionalPanel
+                                  ) # fin du premier conditionalPanel
                 ) # fin de variable 3 - last
               )), # fin de flowLayout
               
