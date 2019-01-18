@@ -1,7 +1,6 @@
-# Script pou définir les éléments communs à l'UI et au serveur
+# Script pour définir les éléments communs à l'UI et au serveur
 Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8") # Encodage
 # Packages ####
-
 library(shiny)
 library(ggplot2)
 library(plotly)
@@ -93,4 +92,4 @@ graph_aes <- function (var, disc = F) {
     return(aes(x=var))
   }
 }
-  
+                         
