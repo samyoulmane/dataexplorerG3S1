@@ -1,5 +1,5 @@
 # Script pou définir les éléments communs à l'UI et au serveur
-Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
+Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8") # Encodage
 # Packages ####
 
 library(shiny)
