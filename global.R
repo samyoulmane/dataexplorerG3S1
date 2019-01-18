@@ -22,7 +22,7 @@ types_onevar <- c("Histogramme"='geom_histogram',
                   "Polygone des frequences"='geom_freqpoly')
 
 # Options avec à utiliser avec le panel selectInput
-options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel")
+options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
 
 # Options avec à utiliser avec le panel sliderInput
 options_slider <- c("alpha", "size", "lower", "middle", "upper", "ymax", "ymin")
@@ -34,11 +34,19 @@ options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
 # Une fonction serait-elle plus adaptée ? #
 options_graph <- c("alpha = input$alpha, stat = input$stat, linetype = input$linetype")
 
+# Vecteur avec les thèmes
+themes_graph <- c("bw", "gray", "dark", "classic", "light", "linedraw", "minimal", "void")
+
 # Fonctions ####
 
-var_type <- function (var) {
-  paste0("output$", var, "_type <- renderText({typeof(", var,"())})") %>% 
-    parse(text=.)
+var_type <- function (variable, var) {
+  if (is.factor(variable)) {
+    paste0("output$", var, "_type <- renderText('factor')") %>% 
+      parse(text=.)
+  } else {
+    paste0("output$", var, "_type <- renderText({typeof(", var,"())})") %>% 
+      parse(text=.)
+  }
 }
 
 # – Fonctions relatives au graphique ####
@@ -60,9 +68,11 @@ option_to_add <- function (option) {
   if (option == "kernel") {
     b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine")'
   }
-  
   if (option == "linetype") {
     b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
+  }
+  if (option == "theme") {
+    b <- 'choices = c("Noir et blanc"="bw", "Gris"="gray", "Foncé"="dark", "Classique"="classic", "Clair"="light", "Linedraw"="linedraw", "Minimal"="minimal", "Void"="void"), selected = "minimal"'
   }
   
   # Numeric options
