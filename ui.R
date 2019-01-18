@@ -39,7 +39,7 @@ shinyUI(fluidPage(
                   selectInput(inputId = "var1",
                               label = "Variable 1 - X",
                               choices = c()),
-                  conditionalPanel("output.var1_type != 'character' || output.var1_type != 'factor'",
+                  conditionalPanel("output.var1_type != 'factor'",
                                    checkboxInput(inputId = "disc_var1", label = "Disrète")
                                    )
                 ), # fin de variable 1
@@ -50,7 +50,10 @@ shinyUI(fluidPage(
                   conditionalPanel(condition = "input.presence_var2 == true",
                                    selectInput(inputId = "var2",
                                                label = NULL,
-                                               choices = c()))
+                                               choices = c()),
+                                   conditionalPanel("output.var2_type != 'factor'",
+                                                    checkboxInput(inputId = "disc_var2", label = "Disrète")
+                                   ))
                 ), # fin de variable 2
                 
                 div(
@@ -60,7 +63,10 @@ shinyUI(fluidPage(
                                    conditionalPanel(condition = "input.presence_var3 == true",
                                                     selectInput(inputId = "var3",
                                                                 label= NULL,
-                                                                choices = c())))
+                                                                choices = c()),
+                                                    conditionalPanel("output.var3_type != 'factor'",
+                                                                     checkboxInput(inputId = "disc_var3", label = "Disrète")
+                                                    )))
                 ) # fin de variable 3 - last
               )), # fin de flowLayout
               

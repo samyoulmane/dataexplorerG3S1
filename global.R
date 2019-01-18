@@ -39,14 +39,8 @@ themes_graph <- c("bw", "gray", "dark", "classic", "light", "linedraw", "minimal
 
 # Fonctions ####
 
-var_type <- function (variable, var) {
-  if (is.factor(variable)) {
-    paste0("output$", var, "_type <- renderText('factor')") %>% 
-      parse(text=.)
-  } else {
-    paste0("output$", var, "_type <- renderText({typeof(", var,"())})") %>% 
-      parse(text=.)
-  }
+to_eval_text <- function (x) {
+  x %>% paste0(., collapse = "") %>% parse(text=.)
 }
 
 # – Fonctions relatives au graphique ####
