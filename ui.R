@@ -1,7 +1,4 @@
 # UI pour l'application Explorateur de données
-
-# UI
-
 shinyUI(fluidPage(
   includeCSS("style.css"),
   titlePanel("Explorateur de données"),
@@ -72,5 +69,4 @@ shinyUI(fluidPage(
               
     ) # fin de mainPanel
   )) # fin de sidebarLayout
-    
 )) # fin de fluidPage
