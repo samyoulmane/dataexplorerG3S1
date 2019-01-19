@@ -80,6 +80,17 @@ shinyServer(function(input, output, session) {
     ggplotly(g)
   })
   
+  # - Graphique à deux variables ####
+  output$graph2 <- renderPlotly({
+    req(input$var1, input$var2, cancelOutput = T)
+    data_set <- data_set()
+    g <- ggplot(data = data_set) +
+      aes_string(x=input$var1, y=input$var2) +
+      graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+      paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
+      labs(x=str_to_title(input$var1), y=str_to_title(input$var2))
+  })
+  
   # Changement du type de graphique en fonction du type de la variable 1
   observe({
     req(input$var1)
