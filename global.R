@@ -18,20 +18,20 @@ types_onevar <- c("Histogramme"='geom_histogram',
                   "Barres"='geom_bar',
                   "Aire"='geom_area',
                   "Densite"='geom_density',
-                  "Polygone des frequences"='geom_freqpoly',
-                  "Ligne (2 variables)" = 'geom_line',
-                  "Points (2 variables)" = 'geom_point',
-                  "Jitter (2 variables)" = 'geom_jitter',
-                  "Colonnes (2 variables)" = 'geom_col',
-                  "Smooth (2 variables)" = 'geom_smooth',
-                  "Boxplot (2 variables)" = 'geom_boxplot',
-                  "Count (2 variables)" = 'geom_count')
+                  "Polygone des frequences"='geom_freqpoly')
+types_morevar <- c("Ligne" = 'geom_line',
+                  "Points" = 'geom_point',
+                  "Jitter" = 'geom_jitter',
+                  "Colonnes" = 'geom_col',
+                  "Smooth" = 'geom_smooth',
+                  "Boxplot" = 'geom_boxplot',
+                  "Count" = 'geom_count')
 
 # Options avec à utiliser avec le panel selectInput
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
 
 # Options avec à utiliser avec le panel sliderInput
-options_slider <- c("alpha", "size", "lower", "middle", "upper", "ymax", "ymin")
+options_slider <- c("alpha", "size", "lower", "middle", "upper", "ymax", "ymin", "anglex")
 
 # Options spécifiques du graph boxplot
 options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
@@ -50,6 +50,7 @@ to_eval_text <- function (x) {
 }
 
 # – Fonctions relatives au graphique ####
+
 
 # Retourne un panel en fonction du type d'option
 panel_option_to_add <- function (option) {
@@ -78,6 +79,9 @@ option_to_add <- function (option) {
   # Numeric options
   if (option == "alpha") {
     b <- "value = 1, min = 0, max = 1, step = 0.1"
+  }
+  if (option == "anglex") {
+    b <- "value = 0, min = 0, max = 90, step = 15"
   }
   
   return(eval(paste(panel_option_to_add(option),b,")") %>% parse(text = .)))
@@ -116,4 +120,6 @@ graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x)) {
       return(aes(x=x, y=y))
     }
 }
+
+
 

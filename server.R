@@ -76,10 +76,10 @@ shinyServer(function(input, output, session) {
       data_set <- data_set()
       g <- ggplot(data = data_set) +
         graph_aes(x = var1(), Xdisc = input$disc_var1) +
-        (graph_type(type = input$gtype) %>% parse(text=.) %>% eval()) +
-        (paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval()) +
-        labs(x=str_to_title(input$var1))
-      
+        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+        paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
+        labs(x=str_to_title(input$var1))+
+        theme(axis.text.x = element_text(angle = input$anglex))
       ggplotly(g)
     } else {return(NULL)}
   })
@@ -119,12 +119,14 @@ shinyServer(function(input, output, session) {
   observe({
     req(input$var1)
     if (!input$presence_var2) {
+      updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(is.character(var1())|is.factor(var1())|input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
         updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
       } else {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
+        
       }      
     }
     if(is.character(var1())|is.factor(var1())) {
@@ -132,6 +134,7 @@ shinyServer(function(input, output, session) {
     }
     if(input$presence_var2) {
       updateSelectInput(session, inputId = "stat", selected = "identity")
+      updateSelectInput(session, inputId = "gtype", choices = types_morevar)
     }
   })
   observeEvent(input$var1, {

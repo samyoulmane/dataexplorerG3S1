@@ -27,8 +27,10 @@ shinyUI(fluidPage(
                                              option_to_add("stat")),
                             option_to_add("theme"),
                             option_to_add("alpha"),
-                            option_to_add("linetype")
-                            )
+                            option_to_add("linetype"),
+                            option_to_add("anglex")
+                 )
+                 
     ), # fin de sidebarPanel
     mainPanel(width = 9, # mainPanel ####
               wellPanel(flowLayout(id = "variables_selector", # – Panel de selection des variables ####
