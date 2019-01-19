@@ -62,22 +62,46 @@ shinyServer(function(input, output, session) {
   
   # Outputs ####
   
-  # – Résumé ####
-  output$summary <- renderPrint({
-    c(mode(var1()), typeof(var1()), is.factor(var1()), str(data_set()))
-  })
+  # – Résumés ####
+  output$typeandmode1 <- renderPrint(c(input$var1, typeof(var1()), mode(var1())))
+  output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2())))
+  output$summary <- renderPrint(summary(data_set()))
+  output$structure <- renderPrint(str(data_set()))
   
   # – Graphique à une variable ####
+
   output$graph1 <- renderPlotly({
-    req(input$var1, cancelOutput = T)
-    data_set <- data_set()
-    g <- ggplot(data = data_set) +
-      graph_aes(var = var1(), disc = input$disc_var1) +
-      (graph_type(type = input$gtype) %>% parse(text=.) %>% eval()) +
-      (paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval()) +
-      labs(x=str_to_title(input$var1))
+    if (!input$presence_var2) {
+      req(input$var1, cancelOutput = T)
+      data_set <- data_set()
+      g <- ggplot(data = data_set) +
+        graph_aes(x = var1(), Xdisc = input$disc_var1) +
+        (graph_type(type = input$gtype) %>% parse(text=.) %>% eval()) +
+        (paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval()) +
+        labs(x=str_to_title(input$var1))
       
-    ggplotly(g)
+      ggplotly(g)
+    } else {return(NULL)}
+  })
+
+  
+  # - Graphique à deux variables ####
+  output$graph2 <- renderPlotly({
+    if (input$disc_var1) {
+      var1 <- as.factor(var1())
+    } else {
+      var1 <- var1()
+    }
+    if (input$presence_var2) {
+      req(input$var1, input$var2, cancelOutput = T)
+      data_set <- data_set()
+      g <- ggplot(data = data_set) +
+        graph_aes(x = var1, y = var2(), func = median) +
+        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+        paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
+        labs(x=str_to_title(input$var1), y=str_to_title(input$var2))
+      ggplotly(g)
+    } else {return(NULL)}
   })
   
   # - Graphique à deux variables ####
@@ -94,12 +118,14 @@ shinyServer(function(input, output, session) {
   # Changement du type de graphique en fonction du type de la variable 1
   observe({
     req(input$var1)
-    if(is.character(var1())|is.factor(var1())|input$disc_var1) {
-      updateSelectInput(session, inputId = "stat", selected = "count")
-      updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
-    } else {
-      updateSelectInput(session, inputId = "stat", selected = "bin")
-      updateSelectInput(session, inputId = "gtype", selected = "geom_density")
+    if (!input$presence_var2) {
+      if(is.character(var1())|is.factor(var1())|input$disc_var1) {
+        updateSelectInput(session, inputId = "stat", selected = "count")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
+      } else {
+        updateSelectInput(session, inputId = "stat", selected = "bin")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_density")
+      }      
     }
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)

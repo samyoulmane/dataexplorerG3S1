@@ -18,7 +18,14 @@ types_onevar <- c("Histogramme"='geom_histogram',
                   "Barres"='geom_bar',
                   "Aire"='geom_area',
                   "Densite"='geom_density',
-                  "Polygone des frequences"='geom_freqpoly')
+                  "Polygone des frequences"='geom_freqpoly',
+                  "Ligne (2 variables)" = 'geom_line',
+                  "Points (2 variables)" = 'geom_point',
+                  "Jitter (2 variables)" = 'geom_jitter',
+                  "Colonnes (2 variables)" = 'geom_col',
+                  "Smooth (2 variables)" = 'geom_smooth',
+                  "Boxplot (2 variables)" = 'geom_boxplot',
+                  "Count (2 variables)" = 'geom_count')
 
 # Options avec à utiliser avec le panel selectInput
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
@@ -51,7 +58,7 @@ panel_option_to_add <- function (option) {
   paste0(type,"Input(inputId = \'", option, "\',label = \'", str_to_title(option), "\',")
 }
 
-# Complète le panel en fonction de l'option choisie
+# Complète le panel en fonction de l'option choisie (UI)
 option_to_add <- function (option) {
   
   # Text options
@@ -76,20 +83,37 @@ option_to_add <- function (option) {
   return(eval(paste(panel_option_to_add(option),b,")") %>% parse(text = .)))
 }
 
-# Retourne le type de graph à afficher avec les options
-graph_type <- function (type) {
-  if (type == "geom_density") {
-    options_graph <- gsub("stat = input$stat", "kernel = input$kernel", options_graph, fixed = T)
+# Retourne les options adaptées au type de graph (server)
+graph_options <- function(type) {
+  if (type %in% c("geom_density", "geom_boxplot")) {
+    options_graph <- gsub("stat = input$stat, ", "", options_graph, fixed = T)
   }
-  return(paste0(type, '(', options_graph, ')'))
+  if (type == "geom_density") {
+    options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")
+  }
+  if (type == "geom_smooth") {
+    options_graph <- c("")
+  }
+  return(options_graph)
 }
 
-# Retourne les abscisses ordonées (pour graph à une variable uniquement)
-graph_aes <- function (var, disc = F) {
-  if (is.character(var)|disc) {
-    return(aes(x=reorder(x = var, X = var, FUN= function(x)-length(x))))
-  } else {
-    return(aes(x=var))
-  }
+# Retourne le type de graph à afficher avec les options
+graph_type <- function (type) {
+  return(paste0(type, '(', graph_options(type), ')'))
 }
-                         
+
+# Retourne les abscisses ordonées
+graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x)) {
+  if (is.character(x)|Xdisc|is.factor(x)) {
+    if (is.null(y)) {
+      return(aes(x=reorder(x = x, X = x, FUN=func)))
+    } else {
+      return(aes(x=reorder(x = x, X = y, FUN=func), y=y))
+    }
+  } else if (is.null(y)) {
+    return(aes(x=x))
+    } else {
+      return(aes(x=x, y=y))
+    }
+}
+
