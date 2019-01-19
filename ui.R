@@ -11,6 +11,13 @@ shinyUI(fluidPage(
                               style = "text-align:center; width: 50%; margin: auto; margin-top: 15%;"
                              )
                   ),
+  
+  
+  
+  
+  
+  
+  
   conditionalPanel("output.confirmation !== ''", sidebarLayout( # Sidebar ####
     sidebarPanel(width = 3,
                  fileInput(inputId = "file_af", 
