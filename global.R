@@ -19,7 +19,13 @@ types_onevar <- c("Histogramme"='geom_histogram',
                   "Aire"='geom_area',
                   "Densite"='geom_density',
                   "Polygone des frequences"='geom_freqpoly',
-                  "Line (2 variables)" = 'geom_line')
+                  "Ligne (2 variables)" = 'geom_line',
+                  "Points (2 variables)" = 'geom_point',
+                  "Jitter (2 variables)" = 'geom_jitter',
+                  "Colonnes (2 variables)" = 'geom_col',
+                  "Smooth (2 variables)" = 'geom_smooth',
+                  "Boxplot (2 variables)" = 'geom_boxplot',
+                  "Count (2 variables)" = 'geom_count')
 
 # Options avec à utiliser avec le panel selectInput
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
