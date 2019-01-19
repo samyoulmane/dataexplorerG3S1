@@ -105,7 +105,7 @@ shinyServer(function(input, output, session) {
   output$confirmation <- renderText({
     inFile <- input$file_be
     if (is.null(inFile)) {
-      #eturn(NULL)
+      #return(NULL)
       return("Table de toutes les données :") # Mettre NULL quand on aura finit le développement
     } else {
       return("Table de toutes les données :")

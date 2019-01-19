@@ -12,12 +12,6 @@ shinyUI(fluidPage(
                              )
                   ),
   
-  
-  
-  
-  
-  
-  
   conditionalPanel("output.confirmation !== ''", sidebarLayout( # Sidebar ####
     sidebarPanel(width = 3,
                  fileInput(inputId = "file_af", 
