@@ -35,31 +35,33 @@ shinyUI(fluidPage(
                 div(
                   selectInput(inputId = "var1", label = "Variable 1 - X", choices = c()),
                   conditionalPanel("output.var1_type != 'factor'",
-                                   checkboxInput(inputId = "disc_var1", label = "Disrète"))
+                                   checkboxInput(inputId = "disc_var1", label = "Discrète"))
                 ), # fin de variable 1
                 div(
                   checkboxInput(inputId="presence_var2", label="Variable 2 - Y"),
                   conditionalPanel(condition = "input.presence_var2 == true",
                                    selectInput(inputId = "var2", label = NULL, choices = c()),
                                    conditionalPanel("output.var2_type != 'factor'",
-                                                    checkboxInput(inputId = "disc_var2", label = "Disrète")))
+                                                    checkboxInput(inputId = "disc_var2", label = "Discrète")))
                 ), # fin de variable 2
                 
                 div(
-                  conditionalPanel(condition = "input.presence_var2 == true",
+                  conditionalPanel("input.presence_var2 == true",
                                    checkboxInput(inputId="presence_var3",label="Variable 3 - couleur"),
-                                   conditionalPanel(condition = "input.presence_var3 == true",
+                                   conditionalPanel("input.presence_var3 == true",
                                                     selectInput(inputId = "var3", label= NULL, choices = c()),
                                                     conditionalPanel("output.var3_type != 'factor'",
-                                                                     checkboxInput(inputId = "disc_var3", label = "Disrète"))
+                                                                     checkboxInput(inputId = "disc_var3", label = "Discrète"))
                                                    ) # fin du deuxième conditionalPanel
                                   ) # fin du premier conditionalPanel
                 ) # fin de variable 3 - last
               )), # fin de flowLayout
               
               # – Outputs ####
-              plotlyOutput("graph1"),
-              plotlyOutput("graph2"),
+              conditionalPanel("input.presence_var2 == false",
+                plotlyOutput("graph1")),
+              conditionalPanel("input.presence_var2 == true & input.presence_var3 == false",
+              plotlyOutput("graph2")),
               br(),
               tags$p("Résumé des variables du jeu de données :"),
               verbatimTextOutput("summary"),
