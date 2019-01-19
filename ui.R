@@ -59,6 +59,7 @@ shinyUI(fluidPage(
               
               # – Outputs ####
               plotlyOutput("graph1"),
+              plotlyOutput("graph2"),
               br(),
               tags$p("Résumé des variables du jeu de données :"),
               verbatimTextOutput("summary"),
