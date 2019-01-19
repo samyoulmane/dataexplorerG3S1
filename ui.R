@@ -1,7 +1,3 @@
-# Bonjour je travaille sur le début
-
-
-
 # UI pour l'application Explorateur de données
 shinyUI(fluidPage(
   includeCSS("style.css"),
@@ -63,6 +59,7 @@ shinyUI(fluidPage(
               
               # – Outputs ####
               plotlyOutput("graph1"),
+              plotlyOutput("graph2"),
               br(),
               tags$p("Résumé des variables du jeu de données :"),
               verbatimTextOutput("summary"),
@@ -74,7 +71,3 @@ shinyUI(fluidPage(
     ) # fin de mainPanel
   )) # fin de sidebarLayout
 )) # fin de fluidPage
-
-
-
-# Bonjour je travaille sur la fin
