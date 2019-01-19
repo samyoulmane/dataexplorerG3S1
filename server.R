@@ -94,12 +94,14 @@ shinyServer(function(input, output, session) {
   # Changement du type de graphique en fonction du type de la variable 1
   observe({
     req(input$var1)
-    if(is.character(var1())|is.factor(var1())|input$disc_var1) {
-      updateSelectInput(session, inputId = "stat", selected = "count")
-      updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
-    } else {
-      updateSelectInput(session, inputId = "stat", selected = "bin")
-      updateSelectInput(session, inputId = "gtype", selected = "geom_density")
+    if (!input$presence_var2) {
+      if(is.character(var1())|is.factor(var1())|input$disc_var1) {
+        updateSelectInput(session, inputId = "stat", selected = "count")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
+      } else {
+        updateSelectInput(session, inputId = "stat", selected = "bin")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_density")
+      }      
     }
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
