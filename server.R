@@ -79,7 +79,7 @@ shinyServer(function(input, output, session) {
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1))+
-        theme(axis.text.x = element_text(angle = input$anglex))
+        theme(axis.text.x = element_text(angle = input$Angle))
       ggplotly(g)
     } else {return(NULL)}
   })
@@ -148,7 +148,7 @@ shinyServer(function(input, output, session) {
   output$confirmation <- renderText({
     inFile <- input$file_be
     if (is.null(inFile)) {
-      #return(NULL)
+      return(NULL)
       return("Table de toutes les données :") # Mettre NULL quand on aura finit le développement
     } else {
       return("Table de toutes les données :")

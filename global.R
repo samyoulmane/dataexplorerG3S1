@@ -31,14 +31,14 @@ types_morevar <- c("Ligne" = 'geom_line',
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
 
 # Options avec à utiliser avec le panel sliderInput
-options_slider <- c("alpha", "size", "lower", "middle", "upper", "ymax", "ymin", "anglex")
+options_slider <- c("Transparence", "size", "lower", "middle", "upper", "ymax", "ymin", "Angle")
 
 # Options spécifiques du graph boxplot
 options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
 
 # Vecteur avec les options, à intégrer dans graph_type
 # Une fonction serait-elle plus adaptée ? #
-options_graph <- c("alpha = input$alpha, stat = input$stat, linetype = input$linetype")
+options_graph <- c("alpha = input$Transparence, stat = input$stat, linetype = input$linetype")
 
 # Vecteur avec les thèmes
 themes_graph <- c("bw", "gray", "dark", "classic", "light", "linedraw", "minimal", "void")
@@ -56,7 +56,7 @@ to_eval_text <- function (x) {
 panel_option_to_add <- function (option) {
   if (option %in% options_select) {type <- "select"}
   if (option %in% options_slider) {type <- "slider"}
-  paste0(type,"Input(inputId = \'", option, "\',label = \'", str_to_title(option), "\',")
+  paste0(type,"Input(\'", option, "\',label = \'", str_to_title(option), "\',")
 }
 
 # Complète le panel en fonction de l'option choisie (UI)
@@ -73,14 +73,14 @@ option_to_add <- function (option) {
     b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
   }
   if (option == "theme") {
-    b <- 'choices = c("Noir et blanc"="bw", "Gris"="gray", "Foncé"="dark", "Classique"="classic", "Clair"="light", "Linedraw"="linedraw", "Minimal"="minimal", "Void"="void"), selected = "minimal"'
+    b <- 'choices = c("Noir et blanc"="bw", "Gris"="gray", "Classique"="classic", "Clair"="light", "Linedraw"="linedraw", "Minimal"="minimal", "Void"="void"), selected = "minimal"'
   }
   
   # Numeric options
-  if (option == "alpha") {
+  if (option == "Transparence") {
     b <- "value = 1, min = 0, max = 1, step = 0.1"
   }
-  if (option == "anglex") {
+  if (option == "Angle") {
     b <- "value = 0, min = 0, max = 90, step = 15"
   }
   
