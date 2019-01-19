@@ -104,6 +104,9 @@ shinyServer(function(input, output, session) {
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
     }
+    if(input$presence_var2) {
+      updateSelectInput(session, inputId = "stat", selected = "identity")
+    }
   })
   observeEvent(input$var1, {
     if(typeof(var1()) == "integer") {
