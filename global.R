@@ -41,7 +41,7 @@ options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
 options_graph <- c("alpha = input$Transparence, stat = input$stat, linetype = input$linetype")
 
 # Vecteur avec les thèmes
-themes_graph <- c("bw", "gray", "dark", "classic", "light", "linedraw", "minimal", "void")
+themes_graph <- c("classic", "light", "linedraw", "minimal")
 
 # Fonctions ####
 
@@ -73,7 +73,7 @@ option_to_add <- function (option) {
     b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
   }
   if (option == "theme") {
-    b <- 'choices = c("Noir et blanc"="bw", "Gris"="gray", "Classique"="classic", "Clair"="light", "Linedraw"="linedraw", "Minimal"="minimal", "Void"="void"), selected = "minimal"'
+    b <- 'choices = c("Sans quadrillage"="classic", "Léger"="light", "Marqué"="linedraw", "Minimal"="minimal"), selected = "minimal"'
   }
   
   # Numeric options
