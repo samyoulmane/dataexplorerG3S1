@@ -56,7 +56,7 @@ option_to_add <- function (option) {
   
   # Text options
   if (option == "stat") {
-    b <- "choices = c('count', 'bin')"
+    b <- "choices = c('count', 'bin', 'identity')"
   }
   if (option == "kernel") {
     b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine")'
