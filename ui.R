@@ -1,7 +1,3 @@
-# Bonjour je travaille sur le début
-
-
-
 # UI pour l'application Explorateur de données
 shinyUI(fluidPage(
   includeCSS("style.css"),
@@ -74,7 +70,3 @@ shinyUI(fluidPage(
     ) # fin de mainPanel
   )) # fin de sidebarLayout
 )) # fin de fluidPage
-
-
-
-# Bonjour je travaille sur la fin
