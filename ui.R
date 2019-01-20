@@ -9,7 +9,8 @@ shinyUI(fluidPage(
                                        fileInput(inputId = "file_be", 
                                                  label = "Veuillez importer un jeu de données",
                                                  buttonLabel = "Parcourir...",
-                                                 placeholder = "Pas de fichier selectionné")
+                                                 placeholder = "Pas de fichier selectionné"),
+                                       actionButton("button", "Utiliser le dataset par défaut")
                              )
             ),
             
