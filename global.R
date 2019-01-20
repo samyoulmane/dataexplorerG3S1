@@ -13,7 +13,7 @@ library(stringr)
 
 # – Options du graphique ####
 
-# Vecteur avec les types de graphiques pour une variable
+# Vecteur avec les types de graphiques
 types_onevar <- c("Histogramme"='geom_histogram',
                   "Barres"='geom_bar',
                   "Aire"='geom_area',
@@ -42,6 +42,11 @@ options_graph <- c("alpha = input$Transparence, stat = input$stat, linetype = in
 
 # Vecteur avec les thèmes
 themes_graph <- c("classic", "light", "linedraw", "minimal")
+
+# Vecteur avec les fonctions de tri
+fonctions_tri <- c("Moyenne" = "mean", 
+                   "Médiane" = "median", 
+                   "Fréquence" = "function(x)-length(x)")
 
 # Fonctions ####
 
@@ -110,9 +115,11 @@ graph_type <- function (type) {
 graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x)) {
   if (is.character(x)|Xdisc|is.factor(x)) {
     if (is.null(y)) {
-      return(aes(x=reorder(x = x, X = x, FUN=func)))
+      x <- reorder(x = x, X = x, FUN=func)
+      return(aes(x=x))
     } else {
-      return(aes(x=reorder(x = x, X = y, FUN=func), y=y))
+      x <- reorder(x = x, X = y, FUN=func)
+      return(aes(x=x, y=y))
     }
   } else if (is.null(y)) {
     return(aes(x=x))

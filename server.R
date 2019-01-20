@@ -64,7 +64,7 @@ shinyServer(function(input, output, session) {
   
   # – Résumés ####
   output$typeandmode1 <- renderPrint(c(input$var1, typeof(var1()), mode(var1())))
-  output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2())))
+  output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2()), is.factor(var2())))
   output$summary <- renderPrint(summary(data_set()))
   output$structure <- renderPrint(str(data_set()))
   
@@ -84,7 +84,6 @@ shinyServer(function(input, output, session) {
     } else {return(NULL)}
   })
 
-  
   # - Graphique à deux variables ####
   output$graph2 <- renderPlotly({
     if (input$disc_var1) {
@@ -96,7 +95,7 @@ shinyServer(function(input, output, session) {
       req(input$var1, input$var2, cancelOutput = T)
       data_set <- data_set()
       g <- ggplot(data = data_set) +
-        graph_aes(x = var1, y = var2(), func = median) +
+        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri))) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2))
@@ -115,7 +114,6 @@ shinyServer(function(input, output, session) {
       } else {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
-        
       }      
     }
     if(is.character(var1())|is.factor(var1())) {
@@ -124,6 +122,9 @@ shinyServer(function(input, output, session) {
     if(input$presence_var2) {
       updateSelectInput(session, inputId = "stat", selected = "identity")
       updateSelectInput(session, inputId = "gtype", choices = types_morevar)
+    }
+    if(is.character(var2())|is.factor(var2())|input$disc_var2) {
+      updateSelectInput(session, inputId = "fct_tri", selected = "function(x)-length(x)")
     }
   })
   observeEvent(input$var1, {

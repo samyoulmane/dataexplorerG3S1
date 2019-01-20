@@ -30,6 +30,9 @@ shinyUI(fluidPage(
                                                                    conditionalPanel("input.gtype != 'geom_density'",
                                                                                     option_to_add("stat")),
                                                                    option_to_add("theme"),
+                                                                   conditionalPanel("output.var2_type != 'factor'", 
+                                                                                    selectInput("fct_tri", "Trier les abscisses en fonction de",
+                                                                                                choices = fonctions_tri)),
                                                                    option_to_add("Transparence"),
                                                                    option_to_add("linetype"),
                                                                    option_to_add("Angle")
@@ -73,6 +76,7 @@ shinyUI(fluidPage(
                                                         tags$p("Résumé des variables du jeu de données :"),
                                                         verbatimTextOutput("typeandmode1"),
                                                         verbatimTextOutput("typeandmode2"),
+                                                        textOutput("var2_type"),
                                                         hr(),
                                                         verbatimTextOutput("structure"),
                                                         hr(),
