@@ -30,7 +30,7 @@ shinyUI(fluidPage(
                                                                    conditionalPanel("input.gtype != 'geom_density'",
                                                                                     option_to_add("stat")),
                                                                    option_to_add("theme"),
-                                                                   conditionalPanel("output.var2_type != 'factor'", 
+                                                                   conditionalPanel("output.var2_type != 'factor' & input.disc_var2 == false", 
                                                                                     selectInput("fct_tri", "Trier les abscisses en fonction de",
                                                                                                 choices = fonctions_tri)),
                                                                    option_to_add("Transparence"),

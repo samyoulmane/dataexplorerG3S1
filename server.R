@@ -98,7 +98,8 @@ shinyServer(function(input, output, session) {
         graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri))) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
-        labs(x=str_to_title(input$var1), y=str_to_title(input$var2))
+        labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
+        theme(axis.text.x = element_text(angle = input$Angle))
       ggplotly(g)
     } else {return(NULL)}
   })
@@ -138,12 +139,16 @@ shinyServer(function(input, output, session) {
   output$confirmation <- renderText({
     inFile <- input$file_be
     if (is.null(inFile)) {
-      return(NULL)
-      return("Table de toutes les données :") # Mettre NULL quand on aura finit le développement
+      if (input$button == 0) {
+        return(NULL)
+      } else {
+        return("Table de toutes les données :")
+      }
     } else {
       return("Table de toutes les données :")
     }
   })
+  
   outputOptions(output, "confirmation", suspendWhenHidden = FALSE)
   output$data_table <- renderDataTable({
     data_set()
