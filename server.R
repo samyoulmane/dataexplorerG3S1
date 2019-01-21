@@ -29,6 +29,17 @@ shinyServer(function(input, output, session) {
     })
   }
   
+  # Fonction qui détermine stat
+  graph_stat <- function(presence_var2 = input$presence_var2, gtype = input$gtype) {
+    if (gtype %in% c("geom_freqpoly", "geom_area")) {
+      return(input$stat)
+    } else if (presence_var2) {
+      return("identity")
+    } else if(gtype %in% types_onevar$`Variable discrète`) {
+      return("count")
+    } else break()
+  }
+  
   # Importation du jeu de données ####
   data_set <- reactive({
     inFile <- input$file_af
@@ -107,7 +118,7 @@ shinyServer(function(input, output, session) {
   # Changement du type de graphique en fonction du type de la variable 1
   observe({
     req(input$var1)
-    if (!input$presence_var2) {
+    if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(is.character(var1())|is.factor(var1())|input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
@@ -116,23 +127,50 @@ shinyServer(function(input, output, session) {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
       }      
-    }
+    } else { # Si la deuxième variable est là :
+      updateSelectInput(session, inputId = "stat", selected = "identity")
+      updateSelectInput(session, inputId = "gtype", choices = types_morevar)
+      if(is.character(var2())|is.factor(var2())) {
+        updateCheckboxInput(session, inputId = "disc_var2", value = T)
+      }
+    } 
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
     }
-    if(input$presence_var2) {
-      updateSelectInput(session, inputId = "stat", selected = "identity")
-      updateSelectInput(session, inputId = "gtype", choices = types_morevar)
-    }
+  })
+  
+  # Changement de la fonction de tri 
+  observe({
     if(is.character(var2())|is.factor(var2())|input$disc_var2) {
       updateSelectInput(session, inputId = "fct_tri", selected = "function(x)-length(x)")
     }
+    if(input$gtype == "geom_boxplot") {
+      updateSelectInput(session, inputId = "fct_tri", selected = "median")
+    }
   })
+  
+  # Changements en fonction d'événements particuliers
   observeEvent(input$var1, {
     if(typeof(var1()) == "integer") {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
+      updateSliderInput(session, inputId = "Angle", value = 0)
     } else {
-      updateCheckboxInput(session, inputId = "disc_var1", value = F)}
+      updateCheckboxInput(session, inputId = "disc_var1", value = F)
+      }
+    if(typeof(var1()) == "double") {
+      updateSliderInput(session, inputId = "Angle", value = 0)
+    }
+  })
+  observeEvent(input$var2, {
+    if(typeof(var2()) == "integer") {
+      updateCheckboxInput(session, inputId = "disc_var2", value = T)
+    } else {
+      updateCheckboxInput(session, inputId = "disc_var2", value = F)}
+  })
+  observeEvent(input$gtype, {
+    if (input$gtype %in% types_onevar$`Variable continue`) {
+      updateSelectInput(session, "stat", choices = c('bin', 'count'))
+    }
   })
   
   # – Table de données ####

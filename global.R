@@ -13,32 +13,27 @@ library(stringr)
 
 # – Options du graphique ####
 
-# Vecteur avec les types de graphiques
-types_onevar <- c("Histogramme"='geom_histogram',
-                  "Barres"='geom_bar',
-                  "Aire"='geom_area',
-                  "Densite"='geom_density',
-                  "Polygone des frequences"='geom_freqpoly')
-types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter',
-                                                        "Points" = 'geom_point',
-                                                        "Smooth" = 'geom_smooth'),
-                      "x discrète, y continue" = list("Colonnes" = 'geom_col',
-                                                      "Boxplot" = 'geom_boxplot'),
+# Vecteurs avec les types de graphiques
+types_onevar <- list("Variable discrète" = c("Histogramme"='geom_histogram', "Barres"='geom_bar'),
+                     "Variable continue" = c("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
+
+types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter', "Points" = 'geom_point', "Courbe" = 'geom_smooth'),
+                      "x discrète, y continue"   = list("Colonnes" = 'geom_col', "Boites à moustaches" = 'geom_boxplot'),
                       "Deux variables discrètes" = list("Count" = 'geom_count'),
-                      "Autres"= list("Ligne" = 'geom_line'))
+                      "Autres"                   = list("Ligne" = 'geom_line'))
 
 # Options avec à utiliser avec le panel selectInput
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
 
 # Options avec à utiliser avec le panel sliderInput
-options_slider <- c("Transparence", "size", "lower", "middle", "upper", "ymax", "ymin", "Angle")
+options_slider <- c("Transparence", "size", "lower", "middle", "upper", "ymax", "ymin", "Angle", "binwidth")
 
 # Options spécifiques du graph boxplot
 options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
 
 # Vecteur avec les options, à intégrer dans graph_type
 # Une fonction serait-elle plus adaptée ? #
-options_graph <- c("alpha = input$Transparence, stat = input$stat, linetype = input$linetype")
+options_graph <- c("alpha = input$Transparence, stat = graph_stat(), linetype = input$linetype")
 
 # Vecteur avec les thèmes
 themes_graph <- c("classic", "light", "linedraw", "minimal")
@@ -69,7 +64,7 @@ option_to_add <- function (option) {
   
   # Text options
   if (option == "stat") {
-    b <- "choices = c('count', 'bin', 'identity')"
+    b <- "choices = c('')"
   }
   if (option == "kernel") {
     b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine")'
@@ -95,7 +90,7 @@ option_to_add <- function (option) {
 # Retourne les options adaptées au type de graph (server)
 graph_options <- function(type) {
   if (type %in% c("geom_density", "geom_boxplot")) {
-    options_graph <- gsub("stat = input$stat, ", "", options_graph, fixed = T)
+    options_graph <- gsub("stat = graph_stat(), ", "", options_graph, fixed = T)
   }
   if (type == "geom_density") {
     options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")

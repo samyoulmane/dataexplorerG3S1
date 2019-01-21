@@ -27,15 +27,16 @@ shinyUI(fluidPage(
                                                         inputPanel(h5("OPTIONS"), # – Options du graph ####
                                                                    conditionalPanel("input.gtype == 'geom_density'",
                                                                                     option_to_add("kernel")),
-                                                                   conditionalPanel("input.gtype != 'geom_density'",
+                                                                   conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                                                                                     option_to_add("stat")),
                                                                    option_to_add("theme"),
-                                                                   conditionalPanel("output.var2_type != 'factor' & input.disc_var2 == false", 
+                                                                   conditionalPanel("input.disc_var1 == true & input.disc_var2 == false", 
                                                                                     selectInput("fct_tri", "Trier les abscisses en fonction de",
                                                                                                 choices = fonctions_tri)),
                                                                    option_to_add("Transparence"),
-                                                                   option_to_add("linetype"),
-                                                                   option_to_add("Angle")
+                                                                   conditionalPanel("output.var1_type == 'factor'",
+                                                                                    option_to_add("Angle")),
+                                                                   option_to_add("linetype")
                                                         )
                                            ),
                                            mainPanel(width = 9, # mainPanel ####
