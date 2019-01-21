@@ -139,6 +139,20 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # Changement du type de graphique en fonction du type des variables 1 et 2
+  observe({
+    req(input$var1, input$var2)
+    if (input$disc_var1 == F & input$disc_var2 == F) {
+      updateSelectInput(session, "gtype", selected = "geom_jitter")
+    } else if (input$disc_var1 == T & input$disc_var2 == F) {
+      updateSelectInput(session, "gtype", selected = "geom_col")
+    } else if (input$disc_var1 == T & input$disc_var2 == T) {
+      updateSelectInput(session, "gtype", selected = "geom_count")
+    } else if (input$disc_var1 == F & input$disc_var2 == T) {
+      updateSelectInput(session, "gtype", selected = "geom_line")
+    }
+  })
+  
   # Changement de la fonction de tri 
   observe({
     if(is.character(var2())|is.factor(var2())|input$disc_var2) {
@@ -154,17 +168,15 @@ shinyServer(function(input, output, session) {
     if(typeof(var1()) == "integer") {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
       updateSliderInput(session, inputId = "Angle", value = 0)
-    } else {
+    } else if(typeof(var1()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var1", value = F)
-      }
-    if(typeof(var1()) == "double") {
       updateSliderInput(session, inputId = "Angle", value = 0)
-    }
+      }
   })
   observeEvent(input$var2, {
     if(typeof(var2()) == "integer") {
       updateCheckboxInput(session, inputId = "disc_var2", value = T)
-    } else {
+    } else if(typeof(var2()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var2", value = F)}
   })
   observeEvent(input$gtype, {
