@@ -40,7 +40,7 @@ shinyServer(function(input, output, session) {
     }
   }
   
-  # data à utiliser pour geom_col
+  # data à utiliser pour geom_col, à optimiser
   data_to_use <- function(gtype) {
     if (!input$disc_var2) {
       var1_label <- input$var1
@@ -107,9 +107,8 @@ shinyServer(function(input, output, session) {
   output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2()), is.factor(var2())))
   output$summary <- renderPrint(summary(data_set()))
   output$structure <- renderPrint(str(data_set()))
-  
+   # à modifier
   # – Graphique à une variable ####
-
   output$graph1 <- renderPlotly({
     if (!input$presence_var2) {
       req(input$var1, input$gtype, cancelOutput = T)
