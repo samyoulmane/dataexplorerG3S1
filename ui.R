@@ -23,14 +23,15 @@ shinyUI(fluidPage(
                                                                   placeholder = "Pas d'autre fichier selectionné"),
                                                         selectInput(inputId = "gtype",
                                                                     label = "Type de graph",
-                                                                    choices = types_onevar, selected = "HOLAAAA"),
+                                                                    choices = types_onevar,
+                                                                    selected = "geom_bar"),
                                                         inputPanel(h5("OPTIONS"), # – Options du graph ####
                                                                    conditionalPanel("input.gtype == 'geom_density'",
                                                                                     option_to_add("kernel")),
                                                                    conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                                                                                     option_to_add("stat")),
                                                                    option_to_add("theme"),
-                                                                   conditionalPanel("input.disc_var1 == true & input.disc_var2 == false", 
+                                                                   conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
                                                                                     selectInput("fct_tri", "Trier les abscisses en fonction de",
                                                                                                 choices = fonctions_tri)),
                                                                    option_to_add("Transparence"),
@@ -48,7 +49,7 @@ shinyUI(fluidPage(
                                                                                checkboxInput(inputId = "disc_var1", 
                                                                                              label = "Discrète"))
                                                                            ), # fin de variable 1
-                                                                           div(checkboxInput("presence_var2", label="Variable 2 - Y"),
+                                                                           div(checkboxInput("presence_var2", label="Variable 2 - Y", value = F),
                                                                                conditionalPanel("input.presence_var2 == true",
                                                                                                 selectInput(inputId = "var2", label = NULL, choices = c()),
                                                                                                 conditionalPanel("output.var2_type != 'factor'",

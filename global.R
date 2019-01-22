@@ -14,7 +14,7 @@ library(stringr)
 # – Options du graphique ####
 
 # Vecteurs avec les types de graphiques
-types_onevar <- list("Variable discrète" = list("Histogramme"='geom_histogram', "Barres"='geom_bar'),
+types_onevar <- list("Variable discrète" = list("Barres"='geom_bar', "Histogramme"='geom_histogram'),
                      "Variable continue" = list("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
 
 types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter', "Points" = 'geom_point', "Courbe" = 'geom_smooth'),
@@ -88,21 +88,28 @@ option_to_add <- function (option) {
 
 # Retourne les options adaptées au type de graph (server)
 graph_options <- function(type) {
-  if (type %in% c("geom_density", "geom_boxplot", "geom_col")) {
-    options_graph <- gsub("stat = graph_stat(), ", "", options_graph, fixed = T)
+  if (!is.null(type)) {
+    if (type %in% c("geom_density", "geom_boxplot", "geom_col")) {
+      options_graph <- gsub("stat = graph_stat(), ", "", options_graph, fixed = T)
+    }
+    if (type == "geom_density") {
+      options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")
+    }
+    if (type == "geom_smooth") {
+      options_graph <- c("")
+    }
+    if (type %in% c("geom_count", "geom_point", "geom_jitter")) {
+      options_graph <- gsub(", linetype = input$linetype", "", options_graph, fixed = T)
+    }
+    return(options_graph)
   }
-  if (type == "geom_density") {
-    options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")
-  }
-  if (type == "geom_smooth") {
-    options_graph <- c("")
-  }
-  return(options_graph)
 }
 
 # Retourne le type de graph à afficher avec les options
 graph_type <- function (type) {
-  return(paste0(type, '(', graph_options(type), ')'))
+  if (!is.null(type)) {
+    return(paste0(type, '(', graph_options(type), ')'))
+  }
 }
 
 

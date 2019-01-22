@@ -56,7 +56,7 @@ shinyServer(function(input, output, session) {
   }
   
   # Retourne les abscisses ordonées
-  graph_aes <- function (x, Xdisc = F, func = function(x)-length(x), gtype) {
+  graph_aes <- function (x, Xdisc = F, func = length, gtype) {
     if (is.character(x)|Xdisc|is.factor(x)) {
       x <- reorder(x = x, X = x, FUN=func)
       return(aes(x=x))
@@ -108,7 +108,7 @@ shinyServer(function(input, output, session) {
 
   output$graph1 <- renderPlotly({
     if (!input$presence_var2) {
-      req(input$var1, cancelOutput = T)
+      req(input$var1, input$gtype, cancelOutput = T)
       data_set <- data_set()
       g <- ggplot(data = data_set) +
         graph_aes(x = var1()) +
@@ -117,28 +117,27 @@ shinyServer(function(input, output, session) {
         labs(x=str_to_title(input$var1))+
         theme(axis.text.x = element_text(angle = input$Angle))
       ggplotly(g)
-    } else {return(NULL)}
+    }
   })
   
   # –– Changement du type de graphique en fonction du type de la variable 1 ####
   observe({
-    req(input$var1)
     if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(is.character(var1())|is.factor(var1())|input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
-        updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_bar")
       } else {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
-      }      
+      }
     } else { # Si la deuxième variable est là :
       updateSelectInput(session, inputId = "stat", selected = "identity")
       updateSelectInput(session, inputId = "gtype", choices = types_morevar)
       if(is.character(var2())|is.factor(var2())) {
         updateCheckboxInput(session, inputId = "disc_var2", value = T)
       }
-    } 
+    }
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
     }
@@ -178,7 +177,7 @@ shinyServer(function(input, output, session) {
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
   observe({
-    req(input$var1, input$var2)
+    req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if (input$disc_var1 == T & input$disc_var2 == F) {
