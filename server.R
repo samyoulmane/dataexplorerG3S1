@@ -35,7 +35,7 @@ shinyServer(function(input, output, session) {
       return(input$stat)
     } else if (presence_var2) {
       return("identity")
-    } else if(gtype %in% types_onevar$`Variable discrète`) {
+    } else if(gtype %in% c("geom_histogram", "geom_bar")) {
       return("count")
     }
   }
@@ -129,7 +129,7 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(is.character(var1())|is.factor(var1())|input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
-        updateSelectInput(session, inputId = "gtype", selected = "geom_bar")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
       } else {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
