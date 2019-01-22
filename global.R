@@ -106,22 +106,7 @@ graph_type <- function (type) {
   return(paste0(type, '(', graph_options(type), ')'))
 }
 
-# Retourne les abscisses ordonées
-graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x)) {
-  if (is.character(x)|Xdisc|is.factor(x)) {
-    if (is.null(y)) {
-      x <- reorder(x = x, X = x, FUN=func)
-      return(aes(x=x))
-    } else {
-      x <- reorder(x = x, X = y, FUN=func)
-      return(aes(x=x, y=y))
-    }
-  } else if (is.null(y)) {
-    return(aes(x=x))
-    } else {
-      return(aes(x=x, y=y))
-    }
-}
+
 
 
 

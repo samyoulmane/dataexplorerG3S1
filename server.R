@@ -40,6 +40,46 @@ shinyServer(function(input, output, session) {
     } else break()
   }
   
+  # data
+  data_to_use <- function(gtype) {
+    f <- ""
+    var1_label <- input$var1
+    data_set <- data_set()
+    if (gtype == "geom_col") {
+      data_set_reformed <- data_set %>% group_by(eval(parse(text=input$var1)))
+      data_set_reformed <- eval(to_eval_text(c("summarise", "(data_set_reformed, ", input$fct_tri, "(", input$var2, "))"))) %>% 
+        `colnames<-`(., c(input$var1, input$var2))
+      data_set_reformed <- eval(to_eval_text(c("arrange(data_set_reformed, desc(", input$var2, "))"))) %>% 
+        mutate(var1_label=factor(eval(parse(text=input$var1)),
+                                 levels=eval(parse(text=input$var1)))) %>% 
+        select(!!input$var2, var1_label) %>% 
+        `colnames<-`(., c(input$var2, input$var1))
+      return(data_set_reformed)
+    } else {
+      data_set_reformed <- data_set()
+      return(data_set_reformed)
+    }
+  }
+  
+  # Retourne les abscisses ordonées
+  graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x), gtype) {
+    if (is.character(x)|Xdisc|is.factor(x)) {
+      if (is.null(y)) {
+        x <- reorder(x = x, X = x, FUN=func)
+        return(aes(x=x))
+      } else if (gtype == "geom_col"){
+        return(aes_string(x = input$var1, y = input$var2))
+      } else {
+        x <- reorder(x = x, X = y, FUN=func)
+        return(aes(x=x, y=y))
+      }
+    } else if (is.null(y)) {
+      return(aes(x=x))
+    } else {
+      return(aes(x=x, y=y))
+    }
+  }
+  
   # Importation du jeu de données ####
   data_set <- reactive({
     inFile <- input$file_af
@@ -129,11 +169,11 @@ shinyServer(function(input, output, session) {
     if (input$presence_var2) {
       req(input$var1, input$var2, cancelOutput = T)
       data_set <- data_set()
-      g <- ggplot(data = data_set) +
-        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri))) +
+      g <- ggplot(data = data_to_use(input$gtype)) +
+        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri)), gtype = input$gtype) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
-        labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
+        labs(x=str_to_title(input$var1), y=paste(f, input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
       ggplotly(g)
     } else {return(NULL)}
