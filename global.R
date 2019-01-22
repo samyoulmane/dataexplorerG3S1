@@ -14,8 +14,8 @@ library(stringr)
 # – Options du graphique ####
 
 # Vecteurs avec les types de graphiques
-types_onevar <- list("Variable discrète" = c("Histogramme"='geom_histogram', "Barres"='geom_bar'),
-                     "Variable continue" = c("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
+types_onevar <- list("Variable discrète" = list("Histogramme"='geom_histogram', "Barres"='geom_bar'),
+                     "Variable continue" = list("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
 
 types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter', "Points" = 'geom_point', "Courbe" = 'geom_smooth'),
                       "x discrète, y continue"   = list("Colonnes" = 'geom_col', "Boites à moustaches" = 'geom_boxplot'),

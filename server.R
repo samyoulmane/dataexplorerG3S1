@@ -37,12 +37,12 @@ shinyServer(function(input, output, session) {
       return("identity")
     } else if(gtype %in% types_onevar$`Variable discrète`) {
       return("count")
-    } else break()
+    }
   }
   
   # data
   data_to_use <- function(gtype) {
-    f <- ""
+    f <- names(fonctions_tri)[fonctions_tri == input$fct_tri] %>% paste(., "de") # Pour compélter le label des ordonnées
     var1_label <- input$var1
     data_set <- data_set()
     if (gtype == "geom_col") {
@@ -168,8 +168,8 @@ shinyServer(function(input, output, session) {
     }
     if (input$presence_var2) {
       req(input$var1, input$var2, cancelOutput = T)
-      data_set <- data_set()
-      g <- ggplot(data = data_to_use(input$gtype)) +
+      data_set <- data_to_use(input$gtype)
+      g <- ggplot(data = data_set) +
         graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri)), gtype = input$gtype) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
