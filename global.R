@@ -40,8 +40,7 @@ themes_graph <- c("classic", "light", "linedraw", "minimal")
 
 # Vecteur avec les fonctions de tri
 fonctions_tri <- c("Moyenne" = "mean", 
-                   "Médiane" = "median", 
-                   "Fréquence" = "function(x)-length(x)")
+                   "Médiane" = "median")
 
 # Fonctions ####
 

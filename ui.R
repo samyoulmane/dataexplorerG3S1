@@ -23,7 +23,7 @@ shinyUI(fluidPage(
                                                                   placeholder = "Pas d'autre fichier selectionné"),
                                                         selectInput(inputId = "gtype",
                                                                     label = "Type de graph",
-                                                                    choices = types_onevar),
+                                                                    choices = types_onevar, selected = "HOLAAAA"),
                                                         inputPanel(h5("OPTIONS"), # – Options du graph ####
                                                                    conditionalPanel("input.gtype == 'geom_density'",
                                                                                     option_to_add("kernel")),

@@ -9,7 +9,7 @@ shinyServer(function(input, output, session) {
   # Fonction pour créer les variables
   create_variable <- function(variable) {
     reactive({
-      vari <- eval(to_eval_text(c("input$", variable)))
+       vari <- eval(to_eval_text(c("input$", variable)))
       req(vari)
       data_set <- data_set()
       return(eval(to_eval_text(c("data_set$", vari))))
@@ -40,43 +40,28 @@ shinyServer(function(input, output, session) {
     }
   }
   
-  # data
+  # data à utiliser pour geom_col
   data_to_use <- function(gtype) {
-    f <- names(fonctions_tri)[fonctions_tri == input$fct_tri] %>% paste(., "de") # Pour compélter le label des ordonnées
     var1_label <- input$var1
     data_set <- data_set()
-    if (gtype == "geom_col") {
-      data_set_reformed <- data_set %>% group_by(eval(parse(text=input$var1)))
-      data_set_reformed <- eval(to_eval_text(c("summarise", "(data_set_reformed, ", input$fct_tri, "(", input$var2, "))"))) %>% 
-        `colnames<-`(., c(input$var1, input$var2))
-      data_set_reformed <- eval(to_eval_text(c("arrange(data_set_reformed, desc(", input$var2, "))"))) %>% 
-        mutate(var1_label=factor(eval(parse(text=input$var1)),
-                                 levels=eval(parse(text=input$var1)))) %>% 
-        select(!!input$var2, var1_label) %>% 
-        `colnames<-`(., c(input$var2, input$var1))
-      return(data_set_reformed)
-    } else {
-      data_set_reformed <- data_set()
-      return(data_set_reformed)
-    }
+    data_to_use <- data_set %>% group_by(eval(parse(text=input$var1)))
+    data_to_use <- eval(to_eval_text(c("summarise", "(data_to_use, ", input$fct_tri, "(", input$var2, "))"))) %>% 
+      `colnames<-`(., c(input$var1, input$var2))
+    data_to_use <- eval(to_eval_text(c("arrange(data_to_use, ", input$var2, ")"))) %>% 
+      mutate(var1_label=factor(eval(parse(text=input$var1)),
+                               levels=eval(parse(text=input$var1)))) %>% 
+      select(!!input$var2, var1_label) %>% 
+      `colnames<-`(., c(input$var2, input$var1))
+    return(data_to_use)
   }
   
   # Retourne les abscisses ordonées
-  graph_aes <- function (x, y = NULL, Xdisc = F, func = function(x)-length(x), gtype) {
+  graph_aes <- function (x, Xdisc = F, func = function(x)-length(x), gtype) {
     if (is.character(x)|Xdisc|is.factor(x)) {
-      if (is.null(y)) {
-        x <- reorder(x = x, X = x, FUN=func)
-        return(aes(x=x))
-      } else if (gtype == "geom_col"){
-        return(aes_string(x = input$var1, y = input$var2))
-      } else {
-        x <- reorder(x = x, X = y, FUN=func)
-        return(aes(x=x, y=y))
-      }
-    } else if (is.null(y)) {
+      x <- reorder(x = x, X = x, FUN=func)
       return(aes(x=x))
     } else {
-      return(aes(x=x, y=y))
+      return(aes(x=x))
     }
   }
   
@@ -126,7 +111,7 @@ shinyServer(function(input, output, session) {
       req(input$var1, cancelOutput = T)
       data_set <- data_set()
       g <- ggplot(data = data_set) +
-        graph_aes(x = var1(), Xdisc = input$disc_var1) +
+        graph_aes(x = var1()) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1))+
@@ -161,19 +146,31 @@ shinyServer(function(input, output, session) {
   
   # – Graphique à deux variables ####
   output$graph2 <- renderPlotly({
-    if (input$disc_var1) {
-      var1 <- as.factor(var1())
-    } else {
-      var1 <- var1()
-    }
+    data_set <- data_set()
     if (input$presence_var2) {
       req(input$var1, input$var2, cancelOutput = T)
-      data_set <- data_to_use(input$gtype)
-      g <- ggplot(data = data_set) +
-        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri)), gtype = input$gtype) +
+      if (input$disc_var1 & !input$disc_var2 & input$gtype != 'geom_boxplot') {
+        data_set <- data_to_use()
+        x <- input$var1
+        y <- input$var2
+        g <- ggplot(data = data_set) +
+          aes_string(x = x, y = y)
+      } else if (input$gtype == 'geom_boxplot') {
+        x <- reorder(x = var1(), X = var2(), FUN=eval(parse(text = input$fct_tri)))
+        y <- var2()
+        g <- ggplot(data = data_set) +
+          aes(x = x, y = y)
+      } else {
+        x <- var1()
+        y <- var2()
+        g <- ggplot(data = data_set) +
+          aes(x = x, y = y)
+      }
+      
+      g <- g +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
-        labs(x=str_to_title(input$var1), y=paste(f, input$var2)) +
+        labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
       ggplotly(g)
     } else {return(NULL)}
@@ -195,9 +192,6 @@ shinyServer(function(input, output, session) {
   
   # Changement de la fonction de tri 
   observe({
-    if(is.character(var2())|is.factor(var2())|input$disc_var2) {
-      updateSelectInput(session, inputId = "fct_tri", selected = "function(x)-length(x)")
-    }
     if(input$gtype == "geom_boxplot") {
       updateSelectInput(session, inputId = "fct_tri", selected = "median")
     }
