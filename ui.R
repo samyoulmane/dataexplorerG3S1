@@ -37,7 +37,9 @@ shinyUI(fluidPage(
                                                                    option_to_add("Transparence"),
                                                                    conditionalPanel("output.var1_type == 'factor'",
                                                                                     option_to_add("Angle")),
-                                                                   option_to_add("linetype")
+                                                                   option_to_add("linetype"),
+                                                                   conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
+                                                                                    option_to_add("largeur"))
                                                         )
                                            ),
                                            mainPanel(width = 9, # mainPanel ####

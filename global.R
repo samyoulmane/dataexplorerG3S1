@@ -26,10 +26,7 @@ types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter'
 options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kernel", "theme")
 
 # Options avec à utiliser avec le panel sliderInput
-options_slider <- c("Transparence", "size", "lower", "middle", "upper", "ymax", "ymin", "Angle", "binwidth")
-
-# Options spécifiques du graph boxplot
-options_boxplot <- c("lower", "middle", "upper", "ymax", "ymin")
+options_slider <- c("Transparence", "size", "Angle", "largeur")
 
 # Vecteur avec les options, à intégrer dans graph_type
 # Une fonction serait-elle plus adaptée ? #
@@ -82,6 +79,9 @@ option_to_add <- function (option) {
   if (option == "Angle") {
     b <- "value = 0, min = 0, max = 90, step = 15"
   }
+  if (option == "largeur") {
+    b <- "value = 0.9, min = 0.1, max = 1, step = 0.1"
+  }
   
   return(eval(paste(panel_option_to_add(option),b,")") %>% parse(text = .)))
 }
@@ -100,6 +100,9 @@ graph_options <- function(type) {
     }
     if (type %in% c("geom_count", "geom_point", "geom_jitter")) {
       options_graph <- gsub(", linetype = input$linetype", "", options_graph, fixed = T)
+    }
+    if (type %in% c("geom_bar", "geom_boxplot", "geom_col")) {
+      options_graph <- paste(options_graph, "width = input$largeur", sep = ", ", collapse = "")
     }
     return(options_graph)
   }

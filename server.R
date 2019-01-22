@@ -42,21 +42,25 @@ shinyServer(function(input, output, session) {
   
   # data à utiliser pour geom_col
   data_to_use <- function(gtype) {
-    var1_label <- input$var1
-    data_set <- data_set()
-    data_to_use <- data_set %>% group_by(eval(parse(text=input$var1)))
-    data_to_use <- eval(to_eval_text(c("summarise", "(data_to_use, ", input$fct_tri, "(", input$var2, "))"))) %>% 
-      `colnames<-`(., c(input$var1, input$var2))
-    data_to_use <- eval(to_eval_text(c("arrange(data_to_use, ", input$var2, ")"))) %>% 
-      mutate(var1_label=factor(eval(parse(text=input$var1)),
-                               levels=eval(parse(text=input$var1)))) %>% 
-      select(!!input$var2, var1_label) %>% 
-      `colnames<-`(., c(input$var2, input$var1))
-    return(data_to_use)
+    if (!input$disc_var2) {
+      var1_label <- input$var1
+      data_set <- data_set()
+      data_to_use <- data_set %>% group_by(eval(parse(text=input$var1)))
+      data_to_use <- eval(to_eval_text(c("summarise", "(data_to_use, ", input$fct_tri, "(", input$var2, "))"))) %>% 
+        `colnames<-`(., c(input$var1, input$var2))
+      data_to_use <- eval(to_eval_text(c("arrange(data_to_use, ", input$var2, ")"))) %>% 
+        mutate(var1_label=factor(eval(parse(text=input$var1)),
+                                 levels=eval(parse(text=input$var1)))) %>% 
+        select(!!input$var2, var1_label) %>% 
+        `colnames<-`(., c(input$var2, input$var1))
+      return(data_to_use)
+    } else {
+      return(data_set())
+    }
   }
   
   # Retourne les abscisses ordonées
-  graph_aes <- function (x, Xdisc = F, func = length, gtype) {
+  graph_aes <- function (x, Xdisc = F, func = length) {
     if (is.character(x)|Xdisc|is.factor(x)) {
       x <- reorder(x = x, X = x, FUN=func)
       return(aes(x=x))
@@ -111,7 +115,7 @@ shinyServer(function(input, output, session) {
       req(input$var1, input$gtype, cancelOutput = T)
       data_set <- data_set()
       g <- ggplot(data = data_set) +
-        graph_aes(x = var1()) +
+        graph_aes(x = var1(), Xdisc = input$disc_var1) +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1))+
@@ -145,8 +149,8 @@ shinyServer(function(input, output, session) {
   
   # – Graphique à deux variables ####
   output$graph2 <- renderPlotly({
-    data_set <- data_set()
     if (input$presence_var2) {
+      data_set <- data_set()
       req(input$var1, input$var2, cancelOutput = T)
       if (input$disc_var1 & !input$disc_var2 & input$gtype != 'geom_boxplot') {
         data_set <- data_to_use()
@@ -165,13 +169,13 @@ shinyServer(function(input, output, session) {
         g <- ggplot(data = data_set) +
           aes(x = x, y = y)
       }
-      
       g <- g +
         graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
-      ggplotly(g)
+      gg <- ggplotly(g)
+      layout(gg, boxgroupgap=1-input$largeur, 1-input$largeur)
     } else {return(NULL)}
   })
   
