@@ -87,7 +87,7 @@ option_to_add <- function (option) {
 }
 
 # Retourne les options adaptées au type de graph (server)
-graph_options <- function(type) {
+graph_options <- function(type, percent = F, disc_var1 = T) {
   if (!is.null(type)) {
     if (type %in% c("geom_density", "geom_boxplot", "geom_col")) {
       options_graph <- gsub("stat = graph_stat(), ", "", options_graph, fixed = T)
@@ -98,20 +98,23 @@ graph_options <- function(type) {
     if (type == "geom_smooth") {
       options_graph <- c("")
     }
-    if (type %in% c("geom_count", "geom_point", "geom_jitter")) {
-      options_graph <- gsub(", linetype = input$linetype", "", options_graph, fixed = T)
+    if (!disc_var1) {
+      options_graph <- paste(options_graph, "linetype = input$linetype", sep = ", ", collapse = "")
     }
     if (type %in% c("geom_bar", "geom_boxplot", "geom_col")) {
       options_graph <- paste(options_graph, "width = input$largeur", sep = ", ", collapse = "")
+    }
+    if (percent & type %in% c("geom_bar", "geom_histogram")) {
+      options_graph <- paste(options_graph, "aes(y = 100*(..count..)/sum(..count..))", sep = ", ", collapse = "")
     }
     return(options_graph)
   }
 }
 
 # Retourne le type de graph à afficher avec les options
-graph_type <- function (type) {
+graph_type <- function (type, percent = F, disc_var1 = T) {
   if (!is.null(type)) {
-    return(paste0(type, '(', graph_options(type), ')'))
+    return(paste0(type, '(', graph_options(type, percent, disc_var1), ')'))
   }
 }
 

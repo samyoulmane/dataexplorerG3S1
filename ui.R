@@ -25,6 +25,8 @@ shinyUI(fluidPage(
                                                                     label = "Type de graph",
                                                                     choices = types_onevar,
                                                                     selected = "geom_bar"),
+                                                        conditionalPanel("input.gtype == 'geom_bar' || input.gtype == 'geom_histogram'",
+                                                                         checkboxInput("percent", "Pourcentages")),
                                                         inputPanel(h5("OPTIONS"), # – Options du graph ####
                                                                    conditionalPanel("input.gtype == 'geom_density'",
                                                                                     option_to_add("kernel")),
@@ -37,7 +39,8 @@ shinyUI(fluidPage(
                                                                    option_to_add("Transparence"),
                                                                    conditionalPanel("output.var1_type == 'factor'",
                                                                                     option_to_add("Angle")),
-                                                                   option_to_add("linetype"),
+                                                                   conditionalPanel("input.disc_var1 == false",
+                                                                                    option_to_add("linetype")),
                                                                    conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
                                                                                     option_to_add("largeur"))
                                                         )

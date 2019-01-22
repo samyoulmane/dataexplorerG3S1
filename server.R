@@ -115,10 +115,16 @@ shinyServer(function(input, output, session) {
       data_set <- data_set()
       g <- ggplot(data = data_set) +
         graph_aes(x = var1(), Xdisc = input$disc_var1) +
-        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+        graph_type(type = input$gtype, percent = input$percent, disc_var1 = input$disc_var1) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
-        labs(x=str_to_title(input$var1))+
         theme(axis.text.x = element_text(angle = input$Angle))
+      if(input$percent) {
+        g <- g +
+          labs(x=str_to_title(input$var1), y="%")
+      } else {
+        g <- g +
+          labs(x=str_to_title(input$var1))
+      }
       ggplotly(g)
     }
   })
@@ -169,7 +175,7 @@ shinyServer(function(input, output, session) {
           aes(x = x, y = y)
       }
       g <- g +
-        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+        graph_type(type = input$gtype, disc_var1 = input$disc_var1) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
