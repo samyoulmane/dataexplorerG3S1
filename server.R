@@ -94,28 +94,8 @@ shinyServer(function(input, output, session) {
       ggplotly(g)
     } else {return(NULL)}
   })
-
-  # - Graphique à deux variables ####
-  output$graph2 <- renderPlotly({
-    if (input$disc_var1) {
-      var1 <- as.factor(var1())
-    } else {
-      var1 <- var1()
-    }
-    if (input$presence_var2) {
-      req(input$var1, input$var2, cancelOutput = T)
-      data_set <- data_set()
-      g <- ggplot(data = data_set) +
-        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri))) +
-        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
-        paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
-        labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
-        theme(axis.text.x = element_text(angle = input$Angle))
-      ggplotly(g)
-    } else {return(NULL)}
-  })
   
-  # Changement du type de graphique en fonction du type de la variable 1
+  # –– Changement du type de graphique en fonction du type de la variable 1 ####
   observe({
     req(input$var1)
     if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
@@ -139,13 +119,33 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # Changement du type de graphique en fonction du type des variables 1 et 2
+  # – Graphique à deux variables ####
+  output$graph2 <- renderPlotly({
+    if (input$disc_var1) {
+      var1 <- as.factor(var1())
+    } else {
+      var1 <- var1()
+    }
+    if (input$presence_var2) {
+      req(input$var1, input$var2, cancelOutput = T)
+      data_set <- data_set()
+      g <- ggplot(data = data_set) +
+        graph_aes(x = var1, y = var2(), func = eval(parse(text = input$fct_tri))) +
+        graph_type(type = input$gtype) %>% parse(text=.) %>% eval() +
+        paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
+        labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
+        theme(axis.text.x = element_text(angle = input$Angle))
+      ggplotly(g)
+    } else {return(NULL)}
+  })
+  
+  # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
   observe({
     req(input$var1, input$var2)
     if (input$disc_var1 == F & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if (input$disc_var1 == T & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_col")
+      updateSelectInput(session, "gtype", selected = "geom_boxplot")
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_count")
     } else if (input$disc_var1 == F & input$disc_var2 == T) {

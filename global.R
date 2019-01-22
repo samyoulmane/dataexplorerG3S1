@@ -89,7 +89,7 @@ option_to_add <- function (option) {
 
 # Retourne les options adaptées au type de graph (server)
 graph_options <- function(type) {
-  if (type %in% c("geom_density", "geom_boxplot")) {
+  if (type %in% c("geom_density", "geom_boxplot", "geom_col")) {
     options_graph <- gsub("stat = graph_stat(), ", "", options_graph, fixed = T)
   }
   if (type == "geom_density") {
