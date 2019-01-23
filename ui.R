@@ -54,10 +54,10 @@ shinyUI(fluidPage(
                                                                                checkboxInput(inputId = "disc_var1", 
                                                                                              label = "Discrète"))
                                                                            ), # fin de variable 1
-                                                                           conditionalPanel("input.presence_var2 == true",
-                                                                                            id = "blockswitcher",
+                                                                           div(id = "blockswitcher",conditionalPanel("input.presence_var2 == true",
+                                                                                            
                                                                                                 actionButton("switcher", label = "=")
-                                                                            ),
+                                                                            )),
                                                                            div(checkboxInput("presence_var2", label="Variable 2 - Y", value = F),
                                                                                conditionalPanel("input.presence_var2 == true",
                                                                                                 
@@ -82,7 +82,7 @@ shinyUI(fluidPage(
                                                         # – Outputs ####
                                                         conditionalPanel("input.presence_var2 == false",
                                                           plotlyOutput("graph1")),
-                                                        conditionalPanel("input.presence_var2 == true & input.presence_var3 == false",
+                                                        conditionalPanel("input.presence_var2 == true",
                                                         plotlyOutput("graph2")),
                                                         br(),
                                                         tags$p("Résumé des variables du jeu de données :"),

@@ -107,6 +107,9 @@ graph_options <- function(type, percent = F, disc_var1 = T) {
     if (percent & type %in% c("geom_bar", "geom_histogram")) {
       options_graph <- paste(options_graph, "aes(y = 100*(..count..)/sum(..count..))", sep = ", ", collapse = "")
     }
+    if (type == "geom_col") {
+      options_graph <- paste(options_graph, "position = position_dodge()", sep = ", ", collapse = "")
+    }
     return(options_graph)
   }
 }

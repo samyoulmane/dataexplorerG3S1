@@ -42,7 +42,7 @@ shinyServer(function(input, output, session) {
   
   # data à utiliser pour geom_col, à optimiser
   data_to_use <- function(gtype) {
-    if (!input$disc_var2) {
+    if (!input$disc_var2 & input$var1 == input$var3) {
       var1_label <- input$var1
       data_set <- data_set()
       data_to_use <- data_set %>% group_by(eval(parse(text=input$var1)))
@@ -179,6 +179,9 @@ shinyServer(function(input, output, session) {
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
+      if (input$presence_var3) {
+        g <- g + aes_string(fill = input$var3)
+      }
       gg <- ggplotly(g)
       layout(gg, boxgroupgap=1-input$largeur, 1-input$largeur)
     } else {return(NULL)}
