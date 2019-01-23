@@ -56,6 +56,7 @@ shinyUI(fluidPage(
                                                                            ), # fin de variable 1
                                                                            div(checkboxInput("presence_var2", label="Variable 2 - Y", value = F),
                                                                                conditionalPanel("input.presence_var2 == true",
+                                                                                                actionButton("switcher", label = "="),
                                                                                                 selectInput(inputId = "var2", label = NULL, choices = c()),
                                                                                                 conditionalPanel("output.var2_type != 'factor'",
                                                                                                                  checkboxInput(inputId = "disc_var2", label = "Discrète"))
@@ -63,7 +64,6 @@ shinyUI(fluidPage(
                                                                             ), # fin de variable 2
                                                                             div(
                                                                                 conditionalPanel("input.presence_var2 == true",
-                                                                                                 actionButton("switcher", label = "="),
                                                                                                  checkboxInput(inputId="presence_var3",label="Variable 3 - couleur"),
                                                                                                  conditionalPanel("input.presence_var3 == true",
                                                                                                                   selectInput(inputId = "var3", label= NULL, choices = c()),
