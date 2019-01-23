@@ -46,33 +46,29 @@ shinyUI(fluidPage(
                                                         )
                                            ),
                                            mainPanel(width = 9, # mainPanel ####
-                                                     wellPanel(flowLayout(id = "variables_selector", # – Panel de selection des variables ####
-                                                                           div(selectInput("var1", 
-                                                                                           label = "Variable 1 - X", 
-                                                                                           choices = c()),
+                                                     wellPanel(fluidRow(id = "variables_selector", # – Panel de selection des variables ####
+                                                                           column(width = 4, selectInput("var1", "Variable 1 - X", c()), 
                                                                                conditionalPanel("output.var1_type != 'factor'",
-                                                                               checkboxInput(inputId = "disc_var1", 
-                                                                                             label = "Discrète"))
+                                                                               checkboxInput("disc_var1", "Discrète"))
                                                                            ), # fin de variable 1
-                                                                           div(id = "blockswitcher",conditionalPanel("input.presence_var2 == true",
-                                                                                            
-                                                                                                actionButton("switcher", label = "=")
+                                                                           column(id = "blockswitcher", width = 1,
+                                                                                  conditionalPanel("input.presence_var2 == true",
+                                                                                                   actionButton("switcher", "", icon("exchange-alt"))
                                                                             )),
-                                                                           div(checkboxInput("presence_var2", label="Variable 2 - Y", value = F),
+                                                                           column(width = 4,checkboxInput("presence_var2", "Variable 2 - Y", value = F),
                                                                                conditionalPanel("input.presence_var2 == true",
-                                                                                                
-                                                                                                selectInput(inputId = "var2", label = NULL, choices = c()),
+                                                                                                selectInput(inputId = "var2", NULL, c()),
                                                                                                 conditionalPanel("output.var2_type != 'factor'",
-                                                                                                                 checkboxInput(inputId = "disc_var2", label = "Discrète"))
+                                                                                                                 checkboxInput("disc_var2", "Discrète"))
                                                                                 )
                                                                             ), # fin de variable 2
-                                                                            div(
+                                                                            column(width = 3,
                                                                                 conditionalPanel("input.presence_var2 == true",
-                                                                                                 checkboxInput(inputId="presence_var3",label="Variable 3 - couleur"),
+                                                                                                 checkboxInput("presence_var3", "Variable 3 - couleur"),
                                                                                                  conditionalPanel("input.presence_var3 == true",
-                                                                                                                  selectInput(inputId = "var3", label= NULL, choices = c()),
+                                                                                                                  selectInput(inputId = "var3", NULL, c()),
                                                                                                                   conditionalPanel("output.var3_type != 'factor'",
-                                                                                                                                   checkboxInput(inputId = "disc_var3", label = "Discrète"))
+                                                                                                                                   checkboxInput("disc_var3", "Discrète"))
                                                                                                  ) # fin du deuxième conditionalPanel
                                                                                 ) # fin du premier conditionalPanel
                                                                             ) # fin de variable 3

@@ -20,5 +20,10 @@ label[for="var1-selectized"] {
 
 #variables_selector {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+}
+
+#blockswitcher {
+  text-align: center;
+  padding-top: 45px;
 }

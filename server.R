@@ -86,7 +86,7 @@ shinyServer(function(input, output, session) {
   observe({
     req(data_set(), cancelOutput = T)
     for (i in c("var1", "var2", "var3")) {
-      updateSelectInput(session, inputId = i, choices = colnames(data_set()))
+      updateSelectInput(session, inputId = i, choices = c("Choisir" = "", colnames(data_set())))
     }
   })
   
@@ -135,7 +135,7 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(is.character(var1())|is.factor(var1())|input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
-        updateSelectInput(session, inputId = "gtype", selected = "geom_histogram")
+        updateSelectInput(session, inputId = "gtype", selected = "geom_bar")
       } else {
         updateSelectInput(session, inputId = "stat", selected = "bin")
         updateSelectInput(session, inputId = "gtype", selected = "geom_density")
@@ -180,10 +180,11 @@ shinyServer(function(input, output, session) {
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
       if (input$presence_var3) {
+        req(input$var3)
         g <- g + aes_string(fill = input$var3)
       }
       gg <- ggplotly(g)
-      layout(gg, boxgroupgap=1-input$largeur, 1-input$largeur)
+      layout(gg, boxgap=1-input$largeur)
     } else {return(NULL)}
   })
   
@@ -220,7 +221,7 @@ shinyServer(function(input, output, session) {
   # Changements en fonction d'événements particuliers
   observeEvent(input$var1, {
     if(typeof(var1()) == "integer") {
-      updateCheckboxInput(session, inputId = "disc_var1", value = T)
+      updateCheckboxInput(session, inputId = "disc_var1", value = F)
       updateSliderInput(session, inputId = "Angle", value = 0)
     } else if(typeof(var1()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var1", value = F)
@@ -229,7 +230,7 @@ shinyServer(function(input, output, session) {
   })
   observeEvent(input$var2, {
     if(typeof(var2()) == "integer") {
-      updateCheckboxInput(session, inputId = "disc_var2", value = T)
+      updateCheckboxInput(session, inputId = "disc_var2", value = F)
     } else if(typeof(var2()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var2", value = F)}
   })
