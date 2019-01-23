@@ -63,6 +63,7 @@ shinyUI(fluidPage(
                                                                             ), # fin de variable 2
                                                                             div(
                                                                                 conditionalPanel("input.presence_var2 == true",
+                                                                                                 actionButton("switcher", label = "="),
                                                                                                  checkboxInput(inputId="presence_var3",label="Variable 3 - couleur"),
                                                                                                  conditionalPanel("input.presence_var3 == true",
                                                                                                                   selectInput(inputId = "var3", label= NULL, choices = c()),

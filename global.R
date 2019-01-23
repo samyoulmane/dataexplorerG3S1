@@ -69,7 +69,7 @@ option_to_add <- function (option) {
     b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
   }
   if (option == "theme") {
-    b <- 'choices = c("Sans quadrillage"="classic", "Léger"="light", "Marqué"="linedraw", "Minimal"="minimal"), selected = "minimal"'
+    b <- 'choices = c("Minimal"="minimal", "Sans quadrillage"="classic", "Léger"="light", "Marqué"="linedraw"), selected = "minimal"'
   }
   
   # Numeric options

@@ -184,6 +184,15 @@ shinyServer(function(input, output, session) {
     } else {return(NULL)}
   })
   
+  # –– Switcher
+  
+  observeEvent(input$switcher, {
+      a <- input$var1
+      b <- input$var2
+      updateSelectInput(session, "var1", selected = b)
+      updateSelectInput(session, "var2", selected = a)
+    })
+  
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
   observe({
     req(input$var1, input$var2, input$presence_var2)
