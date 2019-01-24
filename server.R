@@ -163,11 +163,14 @@ shinyServer(function(input, output, session) {
         y <- input$var2
         g <- ggplot(data = data_set) +
           aes_string(x = x, y = y)
-      } else if (input$gtype == 'geom_boxplot') {
+      } else if (input$gtype == 'geom_boxplot' & !is.factor(var1())) {
         x <- reorder(x = var1(), X = var2(), FUN=eval(parse(text = input$fct_tri)))
         y <- var2()
         g <- ggplot(data = data_set) +
           aes(x = x, y = y)
+      } else if (input$gtype %in% c('geom_jitter', 'geom_point', 'geom_smooth', 'geom_boxplot', 'geom_col')) {
+        g <- ggplot(data = data_set) +
+          aes_string(x = input$var1, y = input$var2)
       } else {
         x <- var1()
         y <- var2()
@@ -200,9 +203,9 @@ shinyServer(function(input, output, session) {
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
   observe({
     req(input$var1, input$var2, input$presence_var2)
-    if (input$disc_var1 == F & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_jitter")
-    } else if (input$disc_var1 == T & input$disc_var2 == F) {
+    if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
+      updateSelectInput(session, "gtype", selected = "geom_smooth")
+    } else if (input$disc_var1 == T | is.factor(var1()) | is.character(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_boxplot")
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_count")

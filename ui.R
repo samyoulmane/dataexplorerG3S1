@@ -48,8 +48,8 @@ shinyUI(fluidPage(
                                            mainPanel(width = 9, # mainPanel ####
                                                      wellPanel(fluidRow(id = "variables_selector", # – Panel de selection des variables ####
                                                                            column(width = 4, selectInput("var1", "Variable 1 - X", c()), 
-                                                                               conditionalPanel("output.var1_type != 'factor'",
-                                                                               checkboxInput("disc_var1", "Discrète"))
+                                                                               #conditionalPanel("output.var1_type != 'factor'",
+                                                                               checkboxInput("disc_var1", "Discrète")#)
                                                                            ), # fin de variable 1
                                                                            column(id = "blockswitcher", width = 1,
                                                                                   conditionalPanel("input.presence_var2 == true",
@@ -58,8 +58,8 @@ shinyUI(fluidPage(
                                                                            column(width = 4,checkboxInput("presence_var2", "Variable 2 - Y", value = F),
                                                                                conditionalPanel("input.presence_var2 == true",
                                                                                                 selectInput(inputId = "var2", NULL, c()),
-                                                                                                conditionalPanel("output.var2_type != 'factor'",
-                                                                                                                 checkboxInput("disc_var2", "Discrète"))
+                                                                                                #conditionalPanel("output.var2_type != 'factor'",
+                                                                                                                 checkboxInput("disc_var2", "Discrète")#)
                                                                                 )
                                                                             ), # fin de variable 2
                                                                             column(width = 3,
@@ -67,8 +67,8 @@ shinyUI(fluidPage(
                                                                                                  checkboxInput("presence_var3", "Variable 3 - couleur"),
                                                                                                  conditionalPanel("input.presence_var3 == true",
                                                                                                                   selectInput(inputId = "var3", NULL, c()),
-                                                                                                                  conditionalPanel("output.var3_type != 'factor'",
-                                                                                                                                   checkboxInput("disc_var3", "Discrète"))
+                                                                                                                  #conditionalPanel("output.var3_type != 'factor'",
+                                                                                                                                   checkboxInput("disc_var3", "Discrète")#)
                                                                                                  ) # fin du deuxième conditionalPanel
                                                                                 ) # fin du premier conditionalPanel
                                                                             ) # fin de variable 3

@@ -17,7 +17,7 @@ library(stringr)
 types_onevar <- list("Variable discrète" = list("Barres"='geom_bar', "Histogramme"='geom_histogram'),
                      "Variable continue" = list("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
 
-types_morevar <- list("Deux variables continues" = list("Jitter" = 'geom_jitter', "Points" = 'geom_point', "Courbe" = 'geom_smooth'),
+types_morevar <- list("Deux variables continues" = list("Courbe" = 'geom_smooth', "Points" = 'geom_point', "Jitter" = 'geom_jitter'),
                       "x discrète, y continue"   = list("Colonnes" = 'geom_col', "Boites à moustaches" = 'geom_boxplot'),
                       "Deux variables discrètes" = list("Count" = 'geom_count'),
                       "Autres"                   = list("Ligne" = 'geom_line'))
@@ -30,7 +30,7 @@ options_slider <- c("Transparence", "size", "Angle", "largeur")
 
 # Vecteur avec les options, à intégrer dans graph_type
 # Une fonction serait-elle plus adaptée ? #
-options_graph <- c("alpha = input$Transparence, stat = graph_stat(), linetype = input$linetype")
+options_graph <- c("stat = graph_stat(), alpha = input$Transparence")
 
 # Vecteur avec les thèmes
 themes_graph <- c("classic", "light", "linedraw", "minimal")
@@ -98,7 +98,7 @@ graph_options <- function(type, percent = F, disc_var1 = T) {
     if (type == "geom_smooth") {
       options_graph <- c("")
     }
-    if (!disc_var1) {
+    if (!disc_var1 & type != "geom_jitter") {
       options_graph <- paste(options_graph, "linetype = input$linetype", sep = ", ", collapse = "")
     }
     if (type %in% c("geom_bar", "geom_boxplot", "geom_col")) {
