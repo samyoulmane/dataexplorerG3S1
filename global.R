@@ -36,8 +36,7 @@ options_graph <- c("stat = graph_stat(), alpha = input$Transparence")
 themes_graph <- c("classic", "light", "linedraw", "minimal")
 
 # Vecteur avec les fonctions de tri
-fonctions_tri <- c("Moyenne" = "mean", 
-                   "Médiane" = "median")
+fonctions_tri <- c("Moyenne" = "mean", "Mediane" = "median")
 
 # Fonctions ####
 
