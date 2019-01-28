@@ -17,7 +17,7 @@ library(stringr)
 types_onevar <- list("Variable discrète" = list("Barres"='geom_bar', "Histogramme"='geom_histogram'),
                      "Variable continue" = list("Densité"='geom_density', "Aire"='geom_area', "Polygone des fréquences"='geom_freqpoly'))
 
-types_morevar <- list("Deux variables continues" = list("Courbe" = 'geom_smooth', "Points" = 'geom_point', "Jitter" = 'geom_jitter'),
+types_morevar <- list("Deux variables continues" = list("Points" = 'geom_point', "Courbe" = 'geom_smooth', "Jitter" = 'geom_jitter'),
                       "x discrète, y continue"   = list("Colonnes" = 'geom_col', "Boites à moustaches" = 'geom_boxplot'),
                       "Deux variables discrètes" = list("Count" = 'geom_count'),
                       "Autres"                   = list("Ligne" = 'geom_line'))

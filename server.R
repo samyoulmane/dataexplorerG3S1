@@ -42,9 +42,9 @@ shinyServer(function(input, output, session) {
   
   # data à utiliser pour geom_col, à optimiser
   fct_tri <- function(x, fct) {
-    switch(fct, 
-           "mean" = summarise(x, "mean" = mean(!!sym(input$var2))), 
-           "median" = summarise(x, "median" = median(!!sym(input$var2)))
+    switch(fct,
+      "mean" = summarise(x, "mean" = mean(!!sym(input$var2))), 
+      "median" = summarise(x, "median" = median(!!sym(input$var2)))
     )
   }
   
@@ -80,7 +80,7 @@ shinyServer(function(input, output, session) {
       data_set <- data_to_use()
       ggplot(data = data_set) +
         aes_string(x = input$var1, y = input$var2)
-    } else if (a & !b & g == 'geom_boxplot' & is.factor(var1())) {
+    } else if (g == 'geom_boxplot') {
       data_set <- data_set()
       x <- reorder(x = var1(), X = var2(), FUN=eval(parse(text = input$fct_tri)))
       ggplot(data = data_set) +
@@ -204,16 +204,18 @@ shinyServer(function(input, output, session) {
     })
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observe({
+  observe(label = "changement_gtype",{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_smooth")
-    } else if (input$disc_var1 == T | is.factor(var1()) | is.character(var1()) & input$disc_var2 == F) {
+    } else if ((input$disc_var1 == T | is.factor(var1()) | is.character(var1())) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_boxplot")
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_count")
     } else if (input$disc_var1 == F & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_line")
+    } else {
+      updateSelectInput(session, "gtype", selected = "geom_count")
     }
   })
   
