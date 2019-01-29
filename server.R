@@ -1,3 +1,4 @@
+Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
 # Serveur pour l'application Explorateur de données
 
 # Serveur
@@ -165,13 +166,9 @@ shinyServer(function(input, output, session) {
       }
     } else { # Si la deuxième variable est là :
       updateSelectInput(session, inputId = "stat", selected = "identity")
-      updateSelectInput(session, inputId = "gtype", choices = types_morevar)
       if(is.character(var2())|is.factor(var2())) {
         updateCheckboxInput(session, inputId = "disc_var2", value = T)
       }
-    }
-    if(is.character(var1())|is.factor(var1())) {
-      updateCheckboxInput(session, inputId = "disc_var1", value = T)
     }
   })
   
@@ -204,7 +201,7 @@ shinyServer(function(input, output, session) {
     })
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observe(label = "changement_gtype",{
+  observeEvent(c(input$var1, input$var2, input$switcher),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_smooth")
@@ -234,7 +231,10 @@ shinyServer(function(input, output, session) {
     } else if(typeof(var1()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var1", value = F)
       updateSliderInput(session, inputId = "Angle", value = 0)
-      }
+    }
+    if(is.character(var1())|is.factor(var1())) {
+      updateCheckboxInput(session, inputId = "disc_var1", value = T)
+    }
   })
   observeEvent(input$var2, {
     if(typeof(var2()) == "integer") {
@@ -246,6 +246,9 @@ shinyServer(function(input, output, session) {
     if (input$gtype %in% types_onevar$`Variable continue`) {
       updateSelectInput(session, "stat", choices = c('bin', 'count'))
     }
+  })
+  observeEvent(input$presence_var2, {
+    if (input$presence_var2) {updateSelectInput(session, inputId = "gtype", choices = types_morevar)}
   })
   
   # – Table de données ####

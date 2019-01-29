@@ -1,3 +1,4 @@
+Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
 # UI pour l'application Explorateur de données
 shinyUI(fluidPage(
             includeCSS("style.css"),
