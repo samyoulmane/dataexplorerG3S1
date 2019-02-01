@@ -149,6 +149,9 @@ shinyServer(function(input, output, session) {
         g <- g +
           labs(x=str_to_title(input$var1))
       }
+      if (input$coordflip) {
+        g <- g + coord_flip()
+      }
       ggplotly(g)
     }
   })
@@ -186,6 +189,9 @@ shinyServer(function(input, output, session) {
         req(input$var3)
         g <- g + aes_string(fill = input$var3)
       }
+      if (input$coordflip) {
+        g <- g + coord_flip()
+      }
       gg <- ggplotly(g)
       layout(gg, boxgap=1-input$largeur)
     } else {return(NULL)}
@@ -201,7 +207,7 @@ shinyServer(function(input, output, session) {
     })
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observeEvent(c(input$var1, input$var2, input$switcher),{
+  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_smooth")

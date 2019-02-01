@@ -31,6 +31,7 @@ shinyUI(fluidPage(
                                                         inputPanel(h5("OPTIONS"), # – Options du graph ####
                                                                    conditionalPanel("input.gtype == 'geom_density'",
                                                                                     option_to_add("kernel")),
+                                                                   checkboxInput("coordflip", "Inverser les axes"),
                                                                    conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                                                                                     option_to_add("stat")),
                                                                    option_to_add("theme"),
