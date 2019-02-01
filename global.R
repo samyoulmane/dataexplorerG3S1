@@ -2,12 +2,11 @@
 Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8") # Encodage
 # Packages ####
 library(shiny)
-library(ggplot2)
+library(tidyverse)
 library(plotly)
-library(dplyr)
 library(DT)
 library(stringi)
-library(stringr)
+library(desctable)
 
 # Objets utiles plus tard ####
 

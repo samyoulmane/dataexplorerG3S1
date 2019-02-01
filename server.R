@@ -127,10 +127,15 @@ shinyServer(function(input, output, session) {
   # Outputs ####
   
   # – Résumés ####
-  output$typeandmode1 <- renderPrint(c(input$var1, typeof(var1()), mode(var1())))
-  output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2()), is.factor(var2())))
-  output$summary <- renderPrint(summary(data_set()))
-  output$structure <- renderPrint(str(data_set()))
+  # output$typeandmode1 <- renderPrint(c(input$var1, typeof(var1()), mode(var1())))
+  # output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2()), is.factor(var2())))
+  # output$structure <- renderPrint(str(data_set()))
+  
+  output$description <- renderDataTable({
+    data_set <- data_set()
+    data_set %>% desctable %>% as.data.frame()
+  })
+  
    # à modifier
   # – Graphique à une variable ####
   output$graph1 <- renderPlotly({
@@ -148,6 +153,9 @@ shinyServer(function(input, output, session) {
       } else {
         g <- g +
           labs(x=str_to_title(input$var1))
+      }
+      if (input$coordflip) {
+        g <- g + coord_flip()
       }
       ggplotly(g)
     }
@@ -186,6 +194,9 @@ shinyServer(function(input, output, session) {
         req(input$var3)
         g <- g + aes_string(fill = input$var3)
       }
+      if (input$coordflip) {
+        g <- g + coord_flip()
+      }
       gg <- ggplotly(g)
       layout(gg, boxgap=1-input$largeur)
     } else {return(NULL)}
@@ -201,7 +212,7 @@ shinyServer(function(input, output, session) {
     })
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observeEvent(c(input$var1, input$var2, input$switcher),{
+  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_smooth")
