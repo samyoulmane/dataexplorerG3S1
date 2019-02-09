@@ -160,7 +160,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
-      if(is.character(var1())|is.factor(var1())|input$disc_var1) {
+      if(input$disc_var1) {
         updateSelectInput(session, inputId = "stat", selected = "count")
         updateSelectInput(session, inputId = "gtype", selected = "geom_bar")
       } else {
