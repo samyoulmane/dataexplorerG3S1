@@ -32,7 +32,7 @@ shinyUI(fluidPage(
           
           checkboxInput("coordflip", "Inverser les axes"),
           
-          conditionalPanel("input.presence_var2",
+          conditionalPanel("input.presence_var2 & !input.disc_var1",
                            checkboxInput("trend_line", "Ligne de tendance")),
           
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",

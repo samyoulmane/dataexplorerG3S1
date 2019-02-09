@@ -213,7 +213,7 @@ shinyServer(function(input, output, session) {
   observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_smooth")
+      updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if ((input$disc_var1 == T | is.factor(var1()) | is.character(var1())) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_boxplot")
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
