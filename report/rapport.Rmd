@@ -1,12 +1,12 @@
 ---
-title: |
-  | \vspace{8cm} \LARGE{Projet du premier semestre : application Shiny d'exploration de données}
-#title: "Projet du premier semestre : application Shiny d'exploration de données"
+title: 'Projet du premier semestre : application Shiny d''exploration de données'
 author: "Guillaume La & Samy Oulmane"
-subtitle: "UE11 - Parcours d'informatique biomédicale"
+subtitle: UE11 - Parcours d'informatique biomédicale
 output:
   pdf_document:
     fig_caption: yes
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -37,9 +37,9 @@ Nous avons choisi de faire fonctionner l'application en deux temps. Dans un prem
 
 Cet écran principal est constitué de deux parties : une barre latérale (`sidebarPanel`) sur la gauche et une partie graphique et données sur la droite (`mainPanel`). 
 
-La barre latérale sert à paramètrer les options du graphique et à importer un nouveau jeu de données. La sélection des variables se fait alors dans le `mainPanel`, au dessus du graphique.
+La barre latérale sert à paramètrer les options du graphique et à importer un nouveau jeu de données. La sélection des variables se fait alors dans le `mainPanel`, au dessus du graphique. Certaines variables catégorielles sont codées avec des numéros et sont alors considérées comme numériques. C'est pourquoi nous avons ajouté une case à cocher "Discrète" pour chaque variable afin que l'utilisateur fasse interprétér la variable comme catégorielle par le serveur.
 
-Nous avons créé la fonction `option_to_add` pour faciliter l'ajout d'un panel relatif au paramétrage d'une option dans l'UI. Cette fonction écrit automatiquement un paneau `sliderInput` ou `selectInput` en fonction de l'option. Les noms des options nécessitant un `sliderInput` sont dans le vecteur `options_slider` et celles nécessitant un `selectInput` sont dans le vecteur `options_select`. 
+La fonction `option_to_add` facilite l'ajout d'un panel relatif au paramétrage d'une option dans l'UI. Cette fonction écrit automatiquement un paneau `sliderInput` ou `selectInput` en fonction de l'option. Les noms des options nécessitant un `sliderInput` sont dans le vecteur `options_slider` et celles nécessitant un `selectInput` sont dans le vecteur `options_select`. 
 
 ## Production du graphique
 
@@ -47,8 +47,16 @@ Le graphique est obtenu en utilisant le package `ggplot2`.
 
 L'utilisateur choisit la ou les variable(s) à afficher et en fonction du type des variables, catégorielles (discrètes) ou numériques (continues), un type de graphique est utilisé par défaut. L'utilisateur peut ensuite choisir un autre type de graphique grace à un menu déroulant.
 
-Le type de graph accompagné de ses options est retourné par la fonction `graph_type`.
-Cette fonction modifie les options 
+La fonction `graph_type` modifie les options contenues dans le vecteur `options_graph` en fonction du type de graphique et retourne le type de graphique à produire selon la syntaxe de `ggplot2`.
+
+### Réactivité
+
+Pour gérer la réactivité, des variables réactives sont créées à partir du choix de l'utilisateurs avec la fonction `create_variable`.
+
+Le type de variable est géré par deux éléments :
+
+- La case à cocher, qui agit sur le type de graphique à produire, contenue dans `input$disc_varX` où X est le numéro de la variable
+- La variable `output$varX_type`, qui détermine automatiquement le type de la variable indépendament de l'utilisateur. Elle ne sert qu'au niveau de l'UI.
 
 ## Production des tableaux
 

@@ -126,11 +126,6 @@ shinyServer(function(input, output, session) {
   
   # Outputs ####
   
-  # – Résumés ####
-  # output$typeandmode1 <- renderPrint(c(input$var1, typeof(var1()), mode(var1())))
-  # output$typeandmode2 <- renderPrint(c(input$var2, typeof(var2()), mode(var2()), is.factor(var2())))
-  # output$structure <- renderPrint(str(data_set()))
-  
   output$description <- renderDataTable({
     data_set <- data_set()
     data_set %>% desctable %>% as.data.frame()

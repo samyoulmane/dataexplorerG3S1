@@ -1641,7 +1641,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Projet du premier semestre : application Shiny d’exploration de données</h1>
-<h3 class="subtitle"><em>UE11 - Parcours d’informatique biom<c3><a9>dicale</em></h3>
+<h3 class="subtitle"><em>UE11 - Parcours d’informatique biomédicale</em></h3>
 <h4 class="author"><em>Guillaume La &amp; Samy Oulmane</em></h4>
 
 </div>
@@ -1669,12 +1669,23 @@ Maquette de l’application (ecran principal)
 </div>
 <p>Nous avons choisi de faire fonctionner l’application en deux temps. Dans un premier temps une interface apparait au lancement et propose d’importer un jeu de données. Dans un second temps, l’écran principal apparait.</p>
 <p>Cet écran principal est constitué de deux parties : une barre latérale (<code>sidebarPanel</code>) sur la gauche et une partie graphique et données sur la droite (<code>mainPanel</code>).</p>
-<p>La barre latérale sert à paramètrer les options du graphique et à importer un nouveau jeu de données. La sélection des variables se fait alors dans le <code>mainPanel</code>, au dessus du graphique.</p>
+<p>La barre latérale sert à paramètrer les options du graphique et à importer un nouveau jeu de données. La sélection des variables se fait alors dans le <code>mainPanel</code>, au dessus du graphique. Certaines variables catégorielles sont codées avec des numéros et sont alors considérées comme numériques. C’est pourquoi nous avons ajouté une case à cocher “Discrète” pour chaque variable afin que l’utilisateur fasse interprétér la variable comme catégorielle par le serveur.</p>
+<p>La fonction <code>option_to_add</code> facilite l’ajout d’un panel relatif au paramétrage d’une option dans l’UI. Cette fonction écrit automatiquement un paneau <code>sliderInput</code> ou <code>selectInput</code> en fonction de l’option. Les noms des options nécessitant un <code>sliderInput</code> sont dans le vecteur <code>options_slider</code> et celles nécessitant un <code>selectInput</code> sont dans le vecteur <code>options_select</code>.</p>
 </div>
 <div id="production-du-graphique" class="section level2">
 <h2>Production du graphique</h2>
 <p>Le graphique est obtenu en utilisant le package <code>ggplot2</code>.</p>
 <p>L’utilisateur choisit la ou les variable(s) à afficher et en fonction du type des variables, catégorielles (discrètes) ou numériques (continues), un type de graphique est utilisé par défaut. L’utilisateur peut ensuite choisir un autre type de graphique grace à un menu déroulant.</p>
+<p>La fonction <code>graph_type</code> modifie les options contenues dans le vecteur <code>options_graph</code> en fonction du type de graphique et retourne le type de graphique à produire selon la syntaxe de <code>ggplot2</code>.</p>
+<div id="reactivite" class="section level3">
+<h3>Réactivité</h3>
+<p>Pour gérer la réactivité, des variables réactives sont créées à partir du choix de l’utilisateurs avec la fonction <code>create_variable</code>.</p>
+<p>Le type de variable est géré par deux éléments :</p>
+<ul>
+<li>La case à cocher, qui agit sur le type de graphique à produire, contenue dans <code>input$disc_varX</code> où X est le numéro de la variable</li>
+<li>La variable <code>output$varX_type</code>, qui détermine automatiquement le type de la variable indépendament de l’utilisateur. Elle ne sert qu’au niveau de l’UI.</li>
+</ul>
+</div>
 </div>
 <div id="production-des-tableaux" class="section level2">
 <h2>Production des tableaux</h2>
