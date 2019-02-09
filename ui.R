@@ -18,7 +18,7 @@ shinyUI(fluidPage(
                    
       sidebarPanel(width = 3,
                    
-        fileInput("file_af", label = "Importer un autre fichier", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
+        fileInput("file_af", accept ="text/csv", label = "Importer un autre fichier", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
         
         selectInput("gtype", "Type de graph", choices = types_onevar, selected = "geom_bar"),
         
