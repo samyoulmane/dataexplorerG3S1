@@ -1,0 +1,54 @@
+---
+title: |
+  | \vspace{8cm} \LARGE{Projet du premier semestre : application Shiny d'exploration de données}
+#title: "Projet du premier semestre : application Shiny d'exploration de données"
+author: "Guillaume La & Samy Oulmane"
+subtitle: "UE11 - Parcours d'informatique biomédicale"
+output:
+  pdf_document:
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = F)
+```
+
+\newpage
+
+## Objectif du projet
+
+L'objectif de l'application est de répondre au sujet n°2 c'est-à-dire de pouvoir mener une **analyse exploratoire** d'un jeu de données avec description et visualisation des données numériques et catégorielles. En outre, la distribution des variables individuelles doit être observable ainsi que la visualisation et le croisement de deux variables.
+
+Pour répondre à cet objectif, nous avons décidé de construire une application Shiny qui, à partir d'un jeu de données importé :
+
+- permet de visualiser la ou les variables sélectionnée(s) sur un graphique ;
+- permet de personnaliser les options d'affichage de ce graphique sur la barre latérale ;
+- affiche des données sous forme de tableaux.
+
+## Description de l'interface utilisateur
+
+Nous avons commencé par dresser une maquette de l'application :
+
+```{r, out.width='50%', fig.align='center', fig.cap='Maquette de l\'application (ecran principal)', echo=FALSE, eval=T, fig.pos='h'}
+knitr::include_graphics('images/maquette.png')
+```
+
+Nous avons choisi de faire fonctionner l'application en deux temps. Dans un premier temps une interface apparait au lancement et propose d'importer un jeu de données. Dans un second temps, l'écran principal apparait.
+
+Cet écran principal est constitué de deux parties : une barre latérale (`sidebarPanel`) sur la gauche et une partie graphique et données sur la droite (`mainPanel`). 
+
+La barre latérale sert à paramètrer les options du graphique et à importer un nouveau jeu de données. La sélection des variables se fait alors dans le `mainPanel`, au dessus du graphique.
+
+Nous avons créé la fonction `option_to_add` pour faciliter l'ajout d'un panel relatif au paramétrage d'une option dans l'UI. Cette fonction écrit automatiquement un paneau `sliderInput` ou `selectInput` en fonction de l'option. Les noms des options nécessitant un `sliderInput` sont dans le vecteur `options_slider` et celles nécessitant un `selectInput` sont dans le vecteur `options_select`. 
+
+## Production du graphique
+
+Le graphique est obtenu en utilisant le package `ggplot2`.
+
+L'utilisateur choisit la ou les variable(s) à afficher et en fonction du type des variables, catégorielles (discrètes) ou numériques (continues), un type de graphique est utilisé par défaut. L'utilisateur peut ensuite choisir un autre type de graphique grace à un menu déroulant.
+
+Le type de graph accompagné de ses options est retourné par la fonction `graph_type`.
+Cette fonction modifie les options 
+
+## Production des tableaux
+

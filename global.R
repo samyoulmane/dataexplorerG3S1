@@ -28,11 +28,7 @@ options_select <- c("stat", "color", "fill", "linetype", "group", "shape", "kern
 options_slider <- c("Transparence", "size", "Angle", "largeur")
 
 # Vecteur avec les options, à intégrer dans graph_type
-# Une fonction serait-elle plus adaptée ? #
 options_graph <- c("stat = graph_stat(), alpha = input$Transparence")
-
-# Vecteur avec les thèmes
-themes_graph <- c("classic", "light", "linedraw", "minimal")
 
 # Vecteur avec les fonctions de tri
 fonctions_tri <- c("Moyenne" = "mean", "Mediane" = "median")

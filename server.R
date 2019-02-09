@@ -7,7 +7,7 @@ shinyServer(function(input, output, session) {
   
   # Fonctions devant ête définines dans le serveur ####
   
-  # Fonction pour créer les variables
+  # Fonction pour créer les variables réactives
   create_variable <- function(variable) {
     reactive({
        vari <- eval(to_eval_text(c("input$", variable)))
