@@ -32,7 +32,8 @@ shinyUI(fluidPage(
           
           checkboxInput("coordflip", "Inverser les axes"),
           
-          checkboxInput("trend_line", "Ligne de tendance"),
+          conditionalPanel("input.presence_var2",
+                           checkboxInput("trend_line", "Ligne de tendance")),
           
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
             option_to_add("stat")),
