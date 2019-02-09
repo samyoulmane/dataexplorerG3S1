@@ -8,7 +8,7 @@ shinyUI(fluidPage(
   hr(),
   conditionalPanel("output.confirmation == ''", # Ecran d'accueil (importation de fichier) ####
     wellPanel(style = "text-align:center; width: 50%; margin: auto; margin-top: 15%;",
-      fileInput(inputId = "file_be", label = "Veuillez importer un jeu de données", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
+      fileInput(inputId = "file_be", accept ="text/csv", label = "Veuillez importer un jeu de données", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
       actionButton("button", "Utiliser le dataset par défaut")
     )
   ),
