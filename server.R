@@ -66,7 +66,7 @@ shinyServer(function(input, output, session) {
     }
   }
   
-  # Retourne les abscisses ordonées
+  # Retourne les abscisses ordonnées
   graph_aes <- function (x, Xdisc = F, func = length) {
     if (is.character(x)|Xdisc|is.factor(x)) {
       x <- reorder(x = x, X = x, FUN=func)
@@ -191,6 +191,9 @@ shinyServer(function(input, output, session) {
       }
       if (input$coordflip) {
         g <- g + coord_flip()
+      }
+      if (input$trend_line) {
+        g <- g + geom_smooth()
       }
       gg <- ggplotly(g)
       layout(gg, boxgap=1-input$largeur)

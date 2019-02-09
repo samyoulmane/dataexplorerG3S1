@@ -116,6 +116,3 @@ graph_type <- function (type, percent = F, disc_var1 = T) {
 }
 
 
-
-
-
