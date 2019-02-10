@@ -51,16 +51,25 @@ shinyServer(function(input, output, session) {
   
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
-    if (gtype == "geom_col") {
+    if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1)) {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
         fct_tri(input$fct_tri) %>%
         arrange(!!sym(input$fct_tri)) %>%
         mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>%
-        if(!input$presence_var3){select(!!input$fct_tri, var1_label)} else {select(!!input$fct_tri, var1_label, input$var3)} %>%
+        select(!!input$fct_tri, var1_label) %>%
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
+    } else if (gtype == "geom_col" & input$var3 != input$var1) {
+      data_set <- data_set()
+      data_to_use <- data_set %>% 
+        group_by(!!sym(input$var1), !!sym(input$var3)) %>%
+        fct_tri(input$fct_tri) %>%
+        arrange(!!sym(input$fct_tri)) %>%
+        #mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>%
+        select(!!input$fct_tri, !!input$var1, !!input$var3) %>%
+        `colnames<-`(., c(input$var2, input$var3, input$var1))
     } else {
       return(data_set())
     }
@@ -280,7 +289,7 @@ shinyServer(function(input, output, session) {
   })
   
   outputOptions(output, "confirmation", suspendWhenHidden = FALSE)
-  output$data_table <- renderDataTable({
-    data_set()
+  output$data_table <- renderDataTable(filter = 'top', {
+    DT::datatable(data_set(), filter = 'top')
   })
 })
