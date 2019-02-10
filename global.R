@@ -57,7 +57,7 @@ option_to_add <- function (option) {
     b <- "choices = c('')"
   }
   if (option == "kernel") {
-    b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight","cosine", "optcosine")'
+    b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine")'
   }
   if (option == "linetype") {
     b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'

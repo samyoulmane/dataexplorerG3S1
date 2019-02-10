@@ -6,8 +6,6 @@ subtitle: "UE11 - Parcours d'informatique biomédicale"
 output:
   pdf_document:
     fig_caption: yes
-  html_document:
-    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -86,6 +84,20 @@ Pour un graphique à boites à moustaches, c'est la fonction `aes_to_use` qui tr
 ### Couleur
 
 Nous avons ajouté la possibilité pour l'utilisateur de choisir de colorier le graphique avec une troisième variable, créant ainsi des groupes.
+
+### Options de graphique paramétrables
+
+Dans la barre latérale, il est paussible de modifier les options d'affichage suivantes :
+
+- **Pourcentage** : dans un histogramme, affiche les proportions en ordonnées au lieu des effectifs
+- **Inverser les axes** : pour mettre l'axe des ordonnées à l'horizontale et celui des abscisses à la verticale (ajoute un `coord_flip` au code du graphique)
+- **Kernel** : permet de modifier le type de distribution d'un graphique en densité (gaussienne par défaut).
+- **Theme** : permet de modifier le thème du graphique . Nous avons limiter le choix à quatre thèmes : minimal, sans quadrillage, léger et marqué.
+- **Transparence** : permet de modifier la transparence/opacité de certains éléments du graphique (colonnes, cercles, boxplot...). Par défaut à 1.
+- **Angle**
+- **Linetype** : permet de modifier le type de trait sur certains graphiques (pointillés, trait plain etc.)
+- **Ligne de tendence** : permet d'afficher une ligne de tendence sur graphique quand les deux variables sont continues
+- **
 
 ## Production des tableaux
 
