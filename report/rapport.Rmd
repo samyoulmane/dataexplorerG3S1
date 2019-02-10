@@ -60,13 +60,24 @@ Le type de variable est ensuite géré par deux éléments :
 - La case à cocher "Discrète", qui agit sur le type de graphique à produire, contenue dans `input$disc_varX` où X est le numéro de la variable. Elle est cochée par défaut si `is.factor` ou `is.character` renvoie `TRUE` pour la variable donnée.
 - La variable `output$varX_type`, qui détermine automatiquement le type de la variable indépendament de l'utilisateur. Elle ne sert qu'au niveau de l'UI et elle est créée par la fonction `type_variables`.
 
-Dans le serveur, un type de graphique est ensuite sélectionné automatiquement en mettant à jour le menu déroulant.Pour un graphique à une variable nous avons fait les choix suivants :
+Dans le serveur, un type de graphique est ensuite sélectionné automatiquement en mettant à jour le menu déroulant. Pour un graphique à une variable nous avons fait les choix suivants :
 
-- Si la variable est discrète, un graphique à barre (histogramme) est affiché par défaut avec `geom_bar`
+- Si la variable est discrète, un graphique à barre (histogramme) est affiché par défaut avec `geom_bar` avec en abscisse les effectifs pour chaque catégories. Il y a la possibilité d'afficher plutot les pourcentages avec une case à cocher.
 - Si la variable est continue, sa distribution est affichée avec `geom_density`
+
+Pour un graphique avec deux variables : 
+
+- Si la variable en abscisses est discrète et celle en ordonnées continue, un graphique en boite à moustache est affiché par défaut avec `geom_box`. Nous avons choisit ce type de graphique par défaut car il permet d'emblée d'afficher plusieurs informations (médiane, quartiles, min et max). L'utilisateur peut aussi afficher un graphique en colonnes `geom_col` avec ces types de variables. Les boites à moustaches et les colonnes sont par défaut ordonnées en fonction de la *médiane* de la variable en ordonnées, croissante. L'utilisateur a aussi la possibilité de les ordonner selon la *moyenne* croissante avec le menu déroulant "Trier les abscisses en fonction de".
+- Si les deux variables sont continues, un nuage de points est affiché avec `geom_jitter`. Il y a la possibilité d'ajouter une courbe pour décrire la tendance avec `geom_smooth` en cochant une case ou alors d'afficher la courbe seulement en changeant le type de graphique sur "Courbe".
+- Si la variable en abscisses est continue et celle en ordonnées discrète, un graphique en ligne est affichée avec `geom_line`.
+- Si les deux variables sont discrètes, un graphique en ligne est affichée avec `geom_line`.
 
 La fonction `graph_aes` permet de réorganier les abscisses pour un graph à une variable.
 La fonction `aes_to_use` sert a sélectionner les données à utiliser pour le graph. En effet, 
 
 ## Production des tableaux
 
+Nous avons décidé de produire deux tableaux, accessibles via des onglets :
+
+- un tableau "Résumé des variables", produit avec le package `desctable`, qui dresse la liste des varaibels du jeu de données accompagnées de statistiques.
+- un tableau "Données" qui présente le jeu de données à l'état brut, avec la possibilité de filtrer les colonnes selon une valeur et de rechercher une valeur dans le jeu de données.

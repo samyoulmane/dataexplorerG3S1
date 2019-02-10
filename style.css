@@ -1,10 +1,5 @@
 /* Fichier CSS pour la mise en page de l'application Explorateur de données */
 
-body {
-  background: url(logo_univ_rouge.png) no-repeat center center fixed;
-  background-size: contain;
-}
-
 h2 {
   text-align: center;
 }

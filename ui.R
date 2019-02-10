@@ -93,14 +93,14 @@ shinyUI(fluidPage(
         # – Outputs ####
 
         conditionalPanel("input.presence_var2 == false",
-          plotlyOutput("graph1")
+          plotlyOutput("graph1", height = "500px")
         ),
 
         conditionalPanel("input.presence_var2 == true",
-          plotlyOutput("graph2")
+          plotlyOutput("graph2", height = "500px")
         ),
-
-        hr(),
+        
+        br(),
         
         tabsetPanel(type = "pills",
         
@@ -110,8 +110,6 @@ shinyUI(fluidPage(
           ),
         
           tabPanel("Données",
-            br(),
-            textOutput("confirmation"),
             br(),
             dataTableOutput("data_table")
           )

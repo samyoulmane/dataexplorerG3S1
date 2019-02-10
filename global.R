@@ -71,7 +71,7 @@ option_to_add <- function (option) {
     b <- "value = 1, min = 0, max = 1, step = 0.1"
   }
   if (option == "Angle") {
-    b <- "value = 0, min = 0, max = 90, step = 15"
+    b <- "value = 50, min = 0, max = 90, step = 5"
   }
   if (option == "largeur") {
     b <- "value = 0.9, min = 0.1, max = 1, step = 0.1"
@@ -89,8 +89,8 @@ graph_options <- function(type, percent = F, disc_var1 = T) {
     if (type == "geom_density") {
       options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")
     }
-    if (type == "geom_smooth") {
-      options_graph <- c("")
+    if (type %in% c("geom_smooth", "geom_count")) {
+      options_graph <- c("alpha = input$Transparence")
     }
     if (!disc_var1 & type != "geom_jitter") {
       options_graph <- paste(options_graph, "linetype = input$linetype", sep = ", ", collapse = "")

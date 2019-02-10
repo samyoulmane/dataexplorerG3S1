@@ -10,10 +10,15 @@ shinyServer(function(input, output, session) {
   # Fonction pour créer les variables réactives
   create_variable <- function(variable) {
     reactive({
-       vari <- eval(to_eval_text(c("input$", variable)))
+      vari <- eval(to_eval_text(c("input$", variable)))
       req(vari)
-      data_set <- data_set()
-      return(eval(to_eval_text(c("data_set$", vari))))
+      if (variable == "var3" & input$gtype == "geom_col" & input$var3 != input$var1) {
+        data_set <- data_to_use()
+        return(eval(to_eval_text(c("data_set$", vari))))
+      } else {
+        data_set <- data_set()
+        return(eval(to_eval_text(c("data_set$", vari))))
+      }
     })
   }
   
@@ -187,6 +192,7 @@ shinyServer(function(input, output, session) {
   output$graph2 <- renderPlotly({
     if (input$presence_var2) {
       data_set <- data_set()
+      data_to_use <- data_to_use()
       req(input$var1, input$var2, cancelOutput = T)
       g <- aes_to_use() +
         graph_type(type = input$gtype, disc_var1 = input$disc_var1) %>% parse(text=.) %>% eval() +
@@ -195,21 +201,27 @@ shinyServer(function(input, output, session) {
         theme(axis.text.x = element_text(angle = input$Angle))
       if (input$presence_var3) {
         req(input$var3)
-        if (input$disc_var3) {
+        if (input$disc_var3) { # Pour prendre en compte var3
           g <- g + aes(fill = factor(var3())) + 
             scale_fill_discrete(name = input$var3)
         } else {
           g <- g + aes_string(fill = input$var3)
         }
       }
-      if (input$coordflip) {
+      if (input$coordflip) { # Pour inverser les axes
         g <- g + coord_flip()
       }
       if (input$trend_line) {
         g <- g + geom_smooth()
       }
       gg <- ggplotly(g)
-      layout(gg, boxgap=1-input$largeur)
+      if (input$gtype == "geom_boxplot") {
+        gg <- layout(gg, boxgap=1-input$largeur, boxmode = "group") # Le graphique étant produit avec plotly, la largeur des boites à moustaches se modifie ainsi.
+      }
+      if (input$var1 == input$var3) {
+        gg <- layout(gg, showlegend = FALSE)
+      }
+      gg
     } else {return(NULL)}
   })
   
@@ -223,7 +235,7 @@ shinyServer(function(input, output, session) {
     })
   
   # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2),{
+  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2, input$presence_var2),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_jitter")
@@ -280,10 +292,10 @@ shinyServer(function(input, output, session) {
       if (input$button == 0) {
         return(NULL)
       } else {
-        return("Table de toutes les données :")
+        return("Données chargées")
       }
     } else {
-      return("Table de toutes les données :")
+      return("Données chargées")
     }
   })
   
