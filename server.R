@@ -164,6 +164,19 @@ shinyServer(function(input, output, session) {
       if (input$coordflip) {
         g <- g + coord_flip()
       }
+      if(is.numeric(var1())|is.integer(var1())){
+        if (input$stat_mean) {
+          g <- g + geom_vline(xintercept=mean(var1(), na.rm=T), 
+                              linetype="dashed", 
+                              color="red")
+        }
+        if (!is.null(input$perc)) {
+          g <- g + geom_vline(xintercept=quantile(var1(), input$perc), 
+                              linetype="twodash", 
+                              color="blue")
+        }
+      } 
+      
       ggplotly(g)
     }
   })
@@ -210,7 +223,7 @@ shinyServer(function(input, output, session) {
       if (input$coordflip) { # Pour inverser les axes
         g <- g + coord_flip()
       }
-      if (input$trend_line) {
+      if (input$trend_line & input$gtype != "geom_smooth") {
         g <- g + geom_smooth() # Pour ajouter une ligne de tendence
       }
       gg <- ggplotly(g)
@@ -219,6 +232,18 @@ shinyServer(function(input, output, session) {
       }
       if (input$var1 == input$var3) {
         gg <- layout(gg, showlegend = FALSE) # Effacement de la légende si var1 = var3, permet un simple coloriage
+      }
+      if (is.numeric(var2())|is.integer(var2())) {
+        if (input$stat_mean) {
+          g <- g + geom_hline(yintercept=mean(var2(), na.rm=T), 
+                              linetype="dashed", 
+                              color="red")
+        }
+        if (!is.null(input$perc)) {
+          g <- g + geom_hline(yintercept=quantile(var2(), input$perc), 
+                              linetype="twodash", 
+                              color="blue")
+        }
       }
       gg
     } else {return(NULL)}

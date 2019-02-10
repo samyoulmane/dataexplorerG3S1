@@ -32,7 +32,11 @@ shinyUI(fluidPage(
           
           checkboxInput("coordflip", "Inverser les axes"),
           
-          conditionalPanel("input.presence_var2 & !input.disc_var1",
+          conditionalPanel("output.var1_type !== 'factor' & !input.presence_var2 || output.var2_type !=='factor'",
+          checkboxInput("stat_mean", "Moyenne"),
+          numericInput("perc", "Percentile", NULL, min=0, max=1, step = 0.01)),
+          
+          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
                            checkboxInput("trend_line", "Ligne de tendance")),
           
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
@@ -43,12 +47,13 @@ shinyUI(fluidPage(
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
             selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri)),
           
-          option_to_add("Transparence"),
+          conditionalPanel("input.gtype !=='geom_smooth'",
+          option_to_add("Transparence")),
           
           conditionalPanel("output.var1_type == 'factor'",
             option_to_add("Angle")),
           
-          conditionalPanel("input.disc_var1 == false",
+          conditionalPanel("input.disc_var1 == false & input.gtype !=='geom_smooth'",
             option_to_add("linetype")),
 
           conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
