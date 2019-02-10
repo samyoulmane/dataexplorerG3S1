@@ -67,9 +67,8 @@ shinyServer(function(input, output, session) {
         group_by(!!sym(input$var1), !!sym(input$var3)) %>%
         fct_tri(input$fct_tri) %>%
         arrange(!!sym(input$fct_tri)) %>%
-        #mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>%
-        select(!!input$fct_tri, !!input$var1, !!input$var3) %>%
-        `colnames<-`(., c(input$var2, input$var3, input$var1))
+        select(!!input$var1, !!input$var3, !!input$fct_tri) %>%
+        `colnames<-`(., c(input$var1, input$var3, input$var2))
     } else {
       return(data_set())
     }
