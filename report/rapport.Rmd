@@ -1,7 +1,8 @@
 ---
-title: 'Projet du premier semestre : application Shiny d''exploration de données'
+title:  |
+  | \vspace{8cm} \LARGE{Projet du premier semestre : application Shiny d'exploration de données}
 author: "Guillaume La & Samy Oulmane"
-subtitle: UE11 - Parcours d'informatique biomédicale
+subtitle: "UE11 - Parcours d'informatique biomédicale"
 output:
   pdf_document:
     fig_caption: yes
@@ -53,7 +54,7 @@ La fonction `graph_type` modifie les options contenues dans le vecteur `options_
 
 Pour gérer la réactivité, des variables réactives sont créées à partir du choix de l'utilisateurs avec la fonction `create_variable`.
 
-Nous avons utilisé les fonctions `is.factor` et `is.character` pour déterminer le type des variables, considérant que toute variable en chaine de charactères est catégorielle.
+Nous avons utilisé les fonctions `is.factor` et `is.character` pour déterminer le type des variables, considérant que toute variable en chaine de caractères est catégorielle.
 
 Le type de variable est ensuite géré par deux éléments :
 
@@ -67,17 +68,34 @@ Dans le serveur, un type de graphique est ensuite sélectionné automatiquement 
 
 Pour un graphique avec deux variables : 
 
-- Si la variable en abscisses est discrète et celle en ordonnées continue, un graphique en boite à moustache est affiché par défaut avec `geom_box`. Nous avons choisit ce type de graphique par défaut car il permet d'emblée d'afficher plusieurs informations (médiane, quartiles, min et max). L'utilisateur peut aussi afficher un graphique en colonnes `geom_col` avec ces types de variables. Les boites à moustaches et les colonnes sont par défaut ordonnées en fonction de la *médiane* de la variable en ordonnées, croissante. L'utilisateur a aussi la possibilité de les ordonner selon la *moyenne* croissante avec le menu déroulant "Trier les abscisses en fonction de".
+- Si la variable en abscisses est discrète et celle en ordonnées continue, un graphique en boite à moustache est affiché par défaut avec `geom_boxplot`. Nous avons choisit ce type de graphique par défaut car il permet d'emblée d'afficher plusieurs informations (médiane, quartiles, min et max). L'utilisateur peut aussi afficher un graphique en colonnes `geom_col` avec ces types de variables. Les boites à moustaches et les colonnes sont par défaut ordonnées en fonction de la *médiane* de la variable en ordonnées, croissante. L'utilisateur a aussi la possibilité de les ordonner selon la *moyenne* croissante avec le menu déroulant "Trier les abscisses en fonction de".
 - Si les deux variables sont continues, un nuage de points est affiché avec `geom_jitter`. Il y a la possibilité d'ajouter une courbe pour décrire la tendance avec `geom_smooth` en cochant une case ou alors d'afficher la courbe seulement en changeant le type de graphique sur "Courbe".
 - Si la variable en abscisses est continue et celle en ordonnées discrète, un graphique en ligne est affichée avec `geom_line`.
-- Si les deux variables sont discrètes, un graphique en ligne est affichée avec `geom_line`.
+- Si les deux variables sont discrètes, un graphique en cercles est affichée avec `geom_count`.
 
-La fonction `graph_aes` permet de réorganier les abscisses pour un graph à une variable.
-La fonction `aes_to_use` sert a sélectionner les données à utiliser pour le graph. En effet, 
+Les deux derniers choix on été fait en se référant à l'aide-mémoire du package `ggplot2`.
+
+### Tri des données
+
+Pour un histogramme à une variables, c'est la fonction `graph_aes` qui permet de réorganier les abscisses selon un ordre croissant en fonction de la moyenne ou de la médiane de la valeur en ordonnées.
+
+Pour trier les colonnes d'un histogramme à deux variables nous avons utilisé le package `dplyr` dans la fonction `data_to_use`. Cette fonction a en fait pour objectif de redéfinir l'ordre des niveaux des facteurs car c'est cet ordre qui est utilisé par `ggplot` pour ranger les colonnes. Pour se faire elle regroupe les données en fonction de la variable choisie en abscisses puis elle aggrège ses données en fonction, soit de la moyenne, soit de la médiane, de la variable en ordonnées selon le choix de l'utilisateur. C'est la fonction `fct_tri` qui écrit cette ligne d'aggrégation en nommant la colonne ainsi obtenue "mean" ou "median", ceci afin de permettre la réutilisation de `input$fct_tri` (la fonction de tri choisie par l'utilisateur) avec `arrange`. Une nouvelle colonne avec les niveaux ordonnées est ensuite créée. Enfin, les colonnes d'intérêt sont isolées : la colonne contenant la variable 1 avec les niveaux réordonnés, celle contenant la variable 2 et éventuellement celle contenant la variable 3 (on supprime en fait la colonne qui contenait la variable 1 avec niveaux non-ordonnés).
+
+Pour un graphique à boites à moustaches, c'est la fonction `aes_to_use` qui trie les abscisses selon la moyenne ou la médiane de la valeur en ordonnées. En outre, cette fonction selectionne le jeu de données approprié en fonction du type de graphique et renvoie les `aes` à utiliser.
+
+### Couleur
+
+Nous avons ajouté la possibilité pour l'utilisateur de choisir de colorier le graphique avec une troisième variable, créant ainsi des groupes.
 
 ## Production des tableaux
 
 Nous avons décidé de produire deux tableaux, accessibles via des onglets :
 
-- un tableau "Résumé des variables", produit avec le package `desctable`, qui dresse la liste des varaibels du jeu de données accompagnées de statistiques.
+- un tableau "Résumé des variables", produit avec le package `desctable`, qui dresse la liste des variables du jeu de données accompagnées de statistiques les concernant.
 - un tableau "Données" qui présente le jeu de données à l'état brut, avec la possibilité de filtrer les colonnes selon une valeur et de rechercher une valeur dans le jeu de données.
+
+## Aperçu de l'application
+
+```{r, out.width='75%', fig.align='center', fig.cap='Ecran principal de l\'application', echo=FALSE, eval=T, fig.pos='h'}
+knitr::include_graphics('images/apercu.png')
+```

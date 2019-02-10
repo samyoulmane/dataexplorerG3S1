@@ -13,6 +13,7 @@ shinyServer(function(input, output, session) {
       vari <- eval(to_eval_text(c("input$", variable)))
       req(vari)
       if (variable == "var3" & input$gtype == "geom_col" & input$var3 != input$var1) {
+        # Parce que dans ce cas, il une agrégation qui est faite donc pour pouvoir utiliser var3() il faut l'adapter à data_to_use
         data_set <- data_to_use()
         return(eval(to_eval_text(c("data_set$", vari))))
       } else {
@@ -22,7 +23,7 @@ shinyServer(function(input, output, session) {
     })
   }
   
-  # Fonction pour déterminer le type de variable
+  # Fonction pour déterminer le type de variable (renvoie un output utilisé dans l'UI uniquement)
   type_variable <- function(variable) {
     observe({
       req(eval(to_eval_text(c("input$", variable))))
@@ -46,7 +47,7 @@ shinyServer(function(input, output, session) {
     }
   }
   
-  # data à utiliser pour geom_col
+  # Agrégation des données en fonction de la moyenne ou de la médiane
   fct_tri <- function(x, fct) {
     switch(fct,
       "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
@@ -54,6 +55,7 @@ shinyServer(function(input, output, session) {
     )
   }
   
+  # Données triée à utiliser pour les aes
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
     if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1)) {
@@ -62,7 +64,7 @@ shinyServer(function(input, output, session) {
         group_by(!!sym(input$var1)) %>%
         fct_tri(input$fct_tri) %>%
         arrange(!!sym(input$fct_tri)) %>%
-        mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>%
+        mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>% # Création d'une nouvelle colonne avec les levels ordonnés
         select(!!input$fct_tri, var1_label) %>%
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
@@ -85,10 +87,11 @@ shinyServer(function(input, output, session) {
       x <- reorder(x = x, X = x, FUN=func)
       return(aes(x=x))
     } else {
-      return(aes(x=x))
+      return(aes_string(x=input$var1))
     }
   }
   
+  # Pour le tri des abscisses dans un graphique à boites à moustaches
   aes_to_use <- function (a = input$disc_var1, b = input$disc_var2, g = input$gtype) {
     if (a & !b & g!='geom_boxplot') {
       data_set <- data_to_use()
@@ -139,13 +142,9 @@ shinyServer(function(input, output, session) {
   
   # Outputs ####
   
-  output$description <- renderDataTable({
-    data_set <- data_set()
-    data_set %>% desctable %>% as.data.frame()
-  })
+  # – Graphiques ####
   
-   # à modifier
-  # – Graphique à une variable ####
+  # –– Graphique à une variable ####
   output$graph1 <- renderPlotly({
     if (!input$presence_var2) {
       req(input$var1, input$gtype, cancelOutput = T)
@@ -169,7 +168,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # –– Changement du type de graphique en fonction du type de la variable 1 ####
+  # ––– Changement du type de graphique en fonction du type de la variable 1 ####
   observe({
     if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
@@ -188,7 +187,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # – Graphique à deux variables ####
+  # –– Graphique à deux variables ####
   output$graph2 <- renderPlotly({
     if (input$presence_var2) {
       data_set <- data_set()
@@ -203,7 +202,7 @@ shinyServer(function(input, output, session) {
         req(input$var3)
         if (input$disc_var3) { # Pour prendre en compte var3
           g <- g + aes(fill = factor(var3())) + 
-            scale_fill_discrete(name = input$var3)
+            scale_fill_discrete(name = input$var3) # Pour renommer l'étiquette de var3
         } else {
           g <- g + aes_string(fill = input$var3)
         }
@@ -212,20 +211,20 @@ shinyServer(function(input, output, session) {
         g <- g + coord_flip()
       }
       if (input$trend_line) {
-        g <- g + geom_smooth()
+        g <- g + geom_smooth() # Pour ajouter une ligne de tendence
       }
       gg <- ggplotly(g)
       if (input$gtype == "geom_boxplot") {
         gg <- layout(gg, boxgap=1-input$largeur, boxmode = "group") # Le graphique étant produit avec plotly, la largeur des boites à moustaches se modifie ainsi.
       }
       if (input$var1 == input$var3) {
-        gg <- layout(gg, showlegend = FALSE)
+        gg <- layout(gg, showlegend = FALSE) # Effacement de la légende si var1 = var3, permet un simple coloriage
       }
       gg
     } else {return(NULL)}
   })
   
-  # –– Switcher
+  # ––– Switcher
   
   observeEvent(input$switcher, {
       a <- input$var1
@@ -234,7 +233,7 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, "var2", selected = a)
     })
   
-  # –– Changement du type de graphique en fonction du type des variables 1 et 2 ####
+  # ––– Changement du type de graphique en fonction du type des variables 1 et 2 ####
   observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2, input$presence_var2),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
@@ -259,15 +258,13 @@ shinyServer(function(input, output, session) {
   
   # Changements en fonction d'événements particuliers
   observeEvent(input$var1, {
-    if(typeof(var1()) == "integer") {
-      updateCheckboxInput(session, inputId = "disc_var1", value = F)
-      updateSliderInput(session, inputId = "Angle", value = 0)
-    } else if(typeof(var1()) == "double") {
+    if(typeof(var1()) %in% c("integer", "double")) {
       updateCheckboxInput(session, inputId = "disc_var1", value = F)
       updateSliderInput(session, inputId = "Angle", value = 0)
     }
     if(is.character(var1())|is.factor(var1())) {
       updateCheckboxInput(session, inputId = "disc_var1", value = T)
+      updateSliderInput(session, inputId = "Angle", value = 45)
     }
   })
   observeEvent(input$var2, {
@@ -285,7 +282,23 @@ shinyServer(function(input, output, session) {
     if (input$presence_var2) {updateSelectInput(session, inputId = "gtype", choices = types_morevar)}
   })
   
-  # – Table de données ####
+  # – Tableaux ####
+  
+  # –– Résumé ####
+  output$description <- renderDataTable({
+    data_set <- data_set()
+    datatable(data_set %>% 
+                desctable(stats = list("N"= length,
+                                       "%/Mean" = is.factor ~ percent | mean,
+                                       "sd"     = is.factor ~ NA | sd,
+                                       "Med"    = is.normal ~ NA | median,
+                                       "IQR"    = is.normal ~ NA | IQR,
+                                       "Min"    = is.factor ~ NA | min,
+                                       "Max"    = is.factor ~ NA | max)) %>% 
+                as.data.frame(), filter = 'top')
+  })
+  
+  # –– Table de données ####
   output$confirmation <- renderText({
     inFile <- input$file_be
     if (is.null(inFile)) {
@@ -300,7 +313,7 @@ shinyServer(function(input, output, session) {
   })
   
   outputOptions(output, "confirmation", suspendWhenHidden = FALSE)
-  output$data_table <- renderDataTable(filter = 'top', {
+  output$data_table <- renderDataTable({
     DT::datatable(data_set(), filter = 'top')
   })
 })

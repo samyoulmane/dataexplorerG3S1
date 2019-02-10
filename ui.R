@@ -93,11 +93,11 @@ shinyUI(fluidPage(
         # – Outputs ####
 
         conditionalPanel("input.presence_var2 == false",
-          plotlyOutput("graph1", height = "500px")
+          plotlyOutput("graph1", height = "510px")
         ),
 
         conditionalPanel("input.presence_var2 == true",
-          plotlyOutput("graph2", height = "500px")
+          plotlyOutput("graph2", height = "510px")
         ),
         
         br(),
