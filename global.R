@@ -89,7 +89,7 @@ graph_options <- function(type, percent = F, disc_var1 = T) {
     if (type == "geom_density") {
       options_graph <- paste(options_graph, "kernel = input$kernel", sep = ", ", collapse = "")
     }
-    if (type %in% c("geom_smooth", "geom_count")) {
+    if (type == "geom_count") {
       options_graph <- c("alpha = input$Transparence")
     }
     if (!disc_var1 & type != "geom_jitter") {
@@ -103,6 +103,9 @@ graph_options <- function(type, percent = F, disc_var1 = T) {
     }
     if (type == "geom_col") {
       options_graph <- paste(options_graph, "position = position_dodge()", sep = ", ", collapse = "")
+    }
+    if (type == "geom_smooth") {
+      options_graph <- c("")
     }
     return(options_graph)
   }
