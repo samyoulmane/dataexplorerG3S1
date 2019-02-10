@@ -45,7 +45,7 @@ La fonction `option_to_add` facilite l'ajout d'un panel relatif au paramétrage 
 
 Le graphique est obtenu en utilisant le package `ggplot2`.
 
-L'utilisateur choisit la ou les variable(s) à afficher et en fonction du type des variables, catégorielles (discrètes) ou numériques (continues), un type de graphique est utilisé par défaut. L'utilisateur peut ensuite choisir un autre type de graphique grace à un menu déroulant.
+L'utilisateur choisit la ou les variable(s) à afficher et en fonction du type des variables, catégorielles (discrètes) ou numériques (continues), un type de graphique est utilisé par défaut. L'utilisateur peut ensuite choisir un autre type de graphique grace à un menu déroulant. La liste des types de graphiques change en fonction de si l'utilisateur choisit d'afficher une variable ou de croiser deux variables.
 
 La fonction `graph_type` modifie les options contenues dans le vecteur `options_graph` en fonction du type de graphique et retourne le type de graphique à produire selon la syntaxe de `ggplot2`.
 
@@ -53,10 +53,20 @@ La fonction `graph_type` modifie les options contenues dans le vecteur `options_
 
 Pour gérer la réactivité, des variables réactives sont créées à partir du choix de l'utilisateurs avec la fonction `create_variable`.
 
-Le type de variable est géré par deux éléments :
+Nous avons utilisé les fonctions `is.factor` et `is.character` pour déterminer le type des variables, considérant que toute variable en chaine de charactères est catégorielle.
 
-- La case à cocher, qui agit sur le type de graphique à produire, contenue dans `input$disc_varX` où X est le numéro de la variable
-- La variable `output$varX_type`, qui détermine automatiquement le type de la variable indépendament de l'utilisateur. Elle ne sert qu'au niveau de l'UI.
+Le type de variable est ensuite géré par deux éléments :
+
+- La case à cocher "Discrète", qui agit sur le type de graphique à produire, contenue dans `input$disc_varX` où X est le numéro de la variable. Elle est cochée par défaut si `is.factor` ou `is.character` renvoie `TRUE` pour la variable donnée.
+- La variable `output$varX_type`, qui détermine automatiquement le type de la variable indépendament de l'utilisateur. Elle ne sert qu'au niveau de l'UI et elle est créée par la fonction `type_variables`.
+
+Dans le serveur, un type de graphique est ensuite sélectionné automatiquement en mettant à jour le menu déroulant.Pour un graphique à une variable nous avons fait les choix suivants :
+
+- Si la variable est discrète, un graphique à barre (histogramme) est affiché par défaut avec `geom_bar`
+- Si la variable est continue, sa distribution est affichée avec `geom_density`
+
+La fonction `graph_aes` permet de réorganier les abscisses pour un graph à une variable.
+La fonction `aes_to_use` sert a sélectionner les données à utiliser pour le graph. En effet, 
 
 ## Production des tableaux
 
