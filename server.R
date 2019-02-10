@@ -187,7 +187,12 @@ shinyServer(function(input, output, session) {
         theme(axis.text.x = element_text(angle = input$Angle))
       if (input$presence_var3) {
         req(input$var3)
-        g <- g + aes_string(fill = input$var3)
+        if (input$disc_var3) {
+          g <- g + aes(fill = factor(var3())) + 
+            scale_fill_discrete(name = input$var3)
+        } else {
+          g <- g + aes_string(fill = input$var3)
+        }
       }
       if (input$coordflip) {
         g <- g + coord_flip()
