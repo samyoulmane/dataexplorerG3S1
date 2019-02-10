@@ -41,24 +41,24 @@ shinyServer(function(input, output, session) {
     }
   }
   
-  # data à utiliser pour geom_col, à optimiser
+  # data à utiliser pour geom_col
   fct_tri <- function(x, fct) {
     switch(fct,
-      "mean" = summarise(x, "mean" = mean(!!sym(input$var2))), 
+      "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
       "median" = summarise(x, "median" = median(!!sym(input$var2)))
     )
   }
   
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
-    if (gtype == "geom_col" & !input$presence_var3) {
+    if (gtype == "geom_col") {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
         fct_tri(input$fct_tri) %>%
         arrange(!!sym(input$fct_tri)) %>%
         mutate(var1_label=factor(!!sym(input$var1), levels=!!sym(input$var1))) %>%
-        select(!!input$fct_tri, var1_label) %>%
+        if(!input$presence_var3){select(!!input$fct_tri, var1_label)} else {select(!!input$fct_tri, var1_label, input$var3)} %>%
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
     } else {
