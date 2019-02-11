@@ -232,8 +232,8 @@ shinyServer(function(input, output, session) {
                               linetype="dashed", 
                               color="red")
         }
-        if (!is.null(input$perc)) {
-          g <- g + geom_hline(yintercept=quantile(var2(), input$perc), 
+        if (!is.null(input$perc1)) {
+          g <- g + geom_hline(yintercept=quantile(var2(), c(input$perc1, input$perc2)), 
                               linetype="twodash", 
                               color="blue")
         }
