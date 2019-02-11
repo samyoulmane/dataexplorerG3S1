@@ -170,8 +170,8 @@ shinyServer(function(input, output, session) {
                               linetype="dashed", 
                               color="red")
         }
-        if (!is.null(input$perc)) {
-          g <- g + geom_vline(xintercept=quantile(var1(), input$perc), 
+        if (!is.null(input$perc1)) {
+          g <- g + geom_vline(xintercept=quantile(var1(), c(input$perc1, input$perc2)), 
                               linetype="twodash", 
                               color="blue")
         }
