@@ -60,7 +60,7 @@ option_to_add <- function (option) {
     b <- 'choices = c("gaussian", "epanechnikov", "rectangular", "triangular", "biweight", "cosine", "optcosine")'
   }
   if (option == "linetype") {
-    b <- 'choices = c("blank", "solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
+    b <- 'choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")'
   }
   if (option == "theme") {
     b <- 'choices = c("Minimal"="minimal", "Sans quadrillage"="classic", "Léger"="light", "Marqué"="linedraw"), selected = "minimal"'
