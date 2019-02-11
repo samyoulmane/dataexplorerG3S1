@@ -115,7 +115,7 @@ shinyServer(function(input, output, session) {
     if (is.null(inFile)) {
       inFile <- input$file_be
       if (is.null(inFile)) {
-        return(mpg) # J'ai mis ce dataset par défaut pour nous faciliter le développement
+        return(mpg) # Affichage d'un jeu de données de démonstration au cas où
       } else {read.csv(inFile$datapath)}
     } else {read.csv(inFile$datapath)}
   })
@@ -328,14 +328,10 @@ shinyServer(function(input, output, session) {
   output$confirmation <- renderText({
     inFile <- input$file_be
     if (is.null(inFile)) {
-      if (input$button == 0) {
         return(NULL)
-      } else {
+    } else {
         return("Données chargées")
       }
-    } else {
-      return("Données chargées")
-    }
   })
   
   outputOptions(output, "confirmation", suspendWhenHidden = FALSE)

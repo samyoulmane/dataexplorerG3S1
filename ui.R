@@ -12,8 +12,7 @@ shinyUI(fluidPage(
                 accept ="text/csv", 
                 label = "Veuillez importer un jeu de données", 
                 buttonLabel = "Parcourir...", 
-                placeholder = "Pas de fichier selectionné"),
-      actionButton("button", "Utiliser le dataset par défaut")
+                placeholder = "Pas de fichier selectionné")
     )
   ),
   
@@ -28,7 +27,7 @@ shinyUI(fluidPage(
                   buttonLabel = "Parcourir...", 
                   placeholder = "Pas de fichier selectionné"),
         
-        selectInput("gtype", "Type de graph", 
+        selectInput("gtype", "Type de graphique", 
                     choices = types_onevar, 
                     selected = "geom_bar"),
         
@@ -48,7 +47,6 @@ shinyUI(fluidPage(
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                            option_to_add("stat")),
           
-
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
             selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri)),
           
@@ -56,7 +54,9 @@ shinyUI(fluidPage(
                            checkboxInput("stat_mean", "Moyenne"),
                            fluidRow(
                              column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
-                             column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))), 
+                             column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01))
+                           )
+          ), 
           
           conditionalPanel("input.gtype !=='geom_smooth'",
           option_to_add("Transparence")),
@@ -72,13 +72,11 @@ shinyUI(fluidPage(
         
           option_to_add("theme")
 
-
-         # Fin de Options du graph
        ), # Fin de sidebar
 
       mainPanel(width = 9, # mainPanel ####
         wellPanel(fluidRow(id = "variables_selector", # – Panel de selection des variables ####
-
+                           
           column(width = 4, 
             selectInput("var1", "Variable 1 - X", c()),
             checkboxInput("disc_var1", "Discrète")
@@ -133,13 +131,6 @@ shinyUI(fluidPage(
             dataTableOutput("data_table")
           )
         )
-        
-        # verbatimTextOutput("typeandmode1"),
-        # verbatimTextOutput("typeandmode2"),
-        # textOutput("var2_type"),
-        # hr(),
-        # verbatimTextOutput("structure"),
-        # hr(),
         
       ) # fin de mainPanel
     ) # fin de sidebarLayout
