@@ -321,7 +321,8 @@ shinyServer(function(input, output, session) {
                                        "IQR"    = is.normal ~ NA | IQR,
                                        "Min"    = is.factor ~ NA | min,
                                        "Max"    = is.factor ~ NA | max)) %>% 
-                as.data.frame(), filter = 'top')
+                as.data.frame(), filter = 'top') %>% 
+      formatRound(columns=c("%/Mean", "sd", "Med", "Min", "Max"), digits=3)
   })
   
   # –– Table de données ####
