@@ -264,7 +264,7 @@ shinyServer(function(input, output, session) {
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if ((input$disc_var1 == T | is.factor(var1()) | is.character(var1())) & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_boxplot")
+      updateSelectInput(session, "gtype", selected = "geom_col")
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_count")
     } else if (input$disc_var1 == F & input$disc_var2 == T) {

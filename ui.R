@@ -35,7 +35,7 @@ shinyUI(fluidPage(
         conditionalPanel("input.gtype == 'geom_bar' || input.gtype == 'geom_histogram'",
           checkboxInput("percent", "Pourcentages")),
         
-        inputPanel(h5("OPTIONS"), # – Options du graph ####
+        # – Options du graph ####
                    
           conditionalPanel("input.gtype == 'geom_density'",
             option_to_add("kernel")),
@@ -46,6 +46,12 @@ shinyUI(fluidPage(
           
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
             selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri)),
+          
+          conditionalPanel("(output.var1_type !== 'factor' & !input.presence_var2 & !input.disc_var1) || input.presence_var2 & output.var2_type !=='factor'",
+                           checkboxInput("stat_mean", "Moyenne"),
+                           fluidRow(
+                             column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
+                             column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))), 
           
           conditionalPanel("input.gtype !=='geom_smooth'",
           option_to_add("Transparence")),
@@ -58,12 +64,7 @@ shinyUI(fluidPage(
 
           conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
             option_to_add("largeur")),
-          
-          conditionalPanel("(output.var1_type !== 'factor' & !input.presence_var2 & !input.disc_var1) || input.presence_var2 & output.var2_type !=='factor'",
-                           checkboxInput("stat_mean", "Moyenne"),
-                           fluidRow(
-                             column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
-                             column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))), 
+
           
           conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
                            checkboxInput("trend_line", "Ligne de tendance")),
@@ -71,7 +72,7 @@ shinyUI(fluidPage(
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                            option_to_add("stat"))
 
-        ) # Fin de Options du graph
+         # Fin de Options du graph
        ), # Fin de sidebar
 
       mainPanel(width = 9, # mainPanel ####
