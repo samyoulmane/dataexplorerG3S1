@@ -1,11 +1,8 @@
 ---
-title:  |
-  | \vspace{8cm} \LARGE{Projet du premier semestre : application Shiny d'exploration de données}
-author: "Guillaume La & Samy Oulmane"
+title: "Projet du premier semestre : application Shiny d'exploration de données"
+author: "Guillaume LA & Samy OULMANE"
 subtitle: "UE11 - Parcours d'informatique biomédicale"
-output:
-  pdf_document:
-    fig_caption: yes
+output: word_document
 ---
 
 ```{r setup, include=FALSE}
@@ -28,9 +25,7 @@ Pour répondre à cet objectif, nous avons décidé de construire une applicatio
 
 Nous avons commencé par dresser une maquette de l'application :
 
-```{r, out.width='50%', fig.align='center', fig.cap='Maquette de l\'application (ecran principal)', echo=FALSE, eval=T, fig.pos='h'}
-knitr::include_graphics('images/maquette.png')
-```
+
 
 Nous avons choisi de faire fonctionner l'application en deux temps. Dans un premier temps une interface apparait au lancement et propose d'importer un jeu de données. Dans un second temps, l'écran principal apparait.
 
@@ -77,7 +72,7 @@ Les deux derniers choix on été fait en se référant à l'aide-mémoire du pac
 
 Pour un histogramme à une variables, c'est la fonction `graph_aes` qui permet de réorganier les abscisses selon un ordre croissant en fonction de la moyenne ou de la médiane de la valeur en ordonnées.
 
-Pour trier les colonnes d'un histogramme à deux variables nous avons utilisé le package `dplyr` dans la fonction `data_to_use`. Cette fonction a en fait pour objectif de redéfinir l'ordre des niveaux des facteurs car c'est cet ordre qui est utilisé par `ggplot` pour ranger les colonnes. Pour se faire elle regroupe les données en fonction de la variable choisie en abscisses puis elle aggrège ses données en fonction, soit de la moyenne, soit de la médiane, de la variable en ordonnées selon le choix de l'utilisateur. C'est la fonction `fct_tri` qui écrit cette ligne d'aggrégation en nommant la colonne ainsi obtenue "mean" ou "median", ceci afin de permettre la réutilisation de `input$fct_tri` (la fonction de tri choisie par l'utilisateur) avec `arrange`. Une nouvelle colonne avec les niveaux ordonnées est ensuite créée. Enfin, les colonnes d'intérêt sont isolées : la colonne contenant la variable 1 avec les niveaux réordonnés, celle contenant la variable 2 et éventuellement celle contenant la variable 3 (on supprime en fait la colonne qui contenait la variable 1 avec niveaux non-ordonnés).
+Pour trier les colonnes d'un histogramme à deux variables nous avons utilisé le package `dplyr` dans la fonction `data_to_use`. Cette fonction a en fait pour objectif de redéfinir l'ordre des niveaux des facteurs car c'est cet ordre qui est utilisé par `ggplot` pour ranger les colonnes. Pour ce faire elle regroupe les données en fonction de la variable choisie en abscisses puis elle agrège ces données en fonction, soit de la moyenne, soit de la médiane (selon le choix de l'utilisateur). C'est la fonction `fct_tri` qui écrit cette ligne d'agrégation en nommant la colonne ainsi obtenue "mean" ou "median", ceci afin de permettre la réutilisation de `input$fct_tri` (la fonction de tri choisie par l'utilisateur) avec `arrange`. Une nouvelle colonne avec les niveaux ordonnés est ensuite créée. Enfin, les colonnes d'intérêt sont isolées : la colonne contenant la variable 1 avec les niveaux réordonnés, celle contenant la variable 2 et éventuellement celle contenant la variable 3 (on supprime en fait la colonne qui contenait la variable 1 avec niveaux non-ordonnés).
 
 Pour un graphique à boites à moustaches, c'est la fonction `aes_to_use` qui trie les abscisses selon la moyenne ou la médiane de la valeur en ordonnées. En outre, cette fonction selectionne le jeu de données approprié en fonction du type de graphique et renvoie les `aes` à utiliser.
 
@@ -111,6 +106,4 @@ Nous avons décidé de produire deux tableaux, accessibles via des onglets :
 
 ## Aperçu de l'application
 
-```{r, out.width='75%', fig.align='center', fig.cap='Ecran principal de l\'application', echo=FALSE, eval=T, fig.pos='h'}
-knitr::include_graphics('images/apercu.png')
-```
+
