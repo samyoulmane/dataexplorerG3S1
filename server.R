@@ -226,13 +226,6 @@ shinyServer(function(input, output, session) {
       if (input$trend_line & input$gtype != "geom_smooth") {
         g <- g + geom_smooth() # Pour ajouter une ligne de tendence
       }
-      gg <- ggplotly(g)
-      if (input$gtype == "geom_boxplot") {
-        gg <- layout(gg, boxgap=1-input$largeur, boxmode = "group") # Le graphique étant produit avec plotly, la largeur des boites à moustaches se modifie ainsi.
-      }
-      if (input$var1 == input$var3) {
-        gg <- layout(gg, showlegend = FALSE) # Effacement de la légende si var1 = var3, permet un simple coloriage
-      }
       if (is.numeric(var2())|is.integer(var2())) {
         if (input$stat_mean) {
           g <- g + geom_hline(yintercept=mean(var2(), na.rm=T), 
@@ -244,6 +237,14 @@ shinyServer(function(input, output, session) {
                               linetype="twodash", 
                               color="blue")
         }
+      gg <- ggplotly(g)
+      if (input$gtype == "geom_boxplot") {
+        gg <- layout(gg, boxgap=1-input$largeur, boxmode = "group") # Le graphique étant produit avec plotly, la largeur des boites à moustaches se modifie ainsi.
+      }
+      if (input$var1 == input$var3) {
+        gg <- layout(gg, showlegend = FALSE) # Effacement de la légende si var1 = var3, permet un simple coloriage
+      }
+     
       }
       gg
     } else {return(NULL)}
