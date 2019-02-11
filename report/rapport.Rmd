@@ -9,8 +9,6 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE, eval = F)
 ```
 
-\newpage
-
 ## Objectif du projet
 
 L'objectif de l'application est de répondre au sujet n°2 c'est-à-dire de pouvoir mener une **analyse exploratoire** d'un jeu de données avec description et visualisation des données numériques et catégorielles. En outre, la distribution des variables individuelles doit être observable ainsi que la visualisation et le croisement de deux variables.
@@ -20,6 +18,16 @@ Pour répondre à cet objectif, nous avons décidé de construire une applicatio
 - permet de visualiser la ou les variables sélectionnée(s) sur un graphique ;
 - permet de personnaliser les options d'affichage de ce graphique sur la barre latérale ;
 - affiche des données sous forme de tableaux.
+
+## Fichiers constituant l’application
+
+Nous avons choisi de découper l’application en trois fichiers :
+
+- Un fichier global.R qui définit les éléments de l’environnement global, commun à l’interface utilisateur et au serveur. C’est dans ce fichier qu’on trouve les fonctions panel_option_to_add, option_to_add, graph_options et graph_type (leur rôle est détaillé plus tard).
+- Un fichier ui.R qui correspond à l’interface utilisateur. C’est ce fichier qui assemble et organise les éléments avec lesquels l’utilisateur interagit.
+- Un fichier server.R qui correspond au serveur de l’application. C’est au niveau de ce fichier que les données seront traitées et que les graphiques et tableaux seront produits. Il contient les fonctions create_variable, type_variable, graph_stat, fct_tri, data_to_use, graph_aes et aes_to_use.
+
+Un fichier CSS style.R accompagne l’application pour paramétrer la mise en page.
 
 ## Description de l'interface utilisateur
 
