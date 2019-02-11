@@ -42,18 +42,6 @@ shinyUI(fluidPage(
           
           checkboxInput("coordflip", "Inverser les axes"),
           
-          conditionalPanel("output.var1_type !== 'factor' & !input.presence_var2 & input.disc_var1 || output.var2_type !=='factor'",
-            checkboxInput("stat_mean", "Moyenne"),
-            fluidRow(
-              column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
-              column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))),
-          
-          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
-                           checkboxInput("trend_line", "Ligne de tendance")),
-          
-          conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
-            option_to_add("stat")),
-          
           option_to_add("theme"),
           
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
@@ -69,7 +57,19 @@ shinyUI(fluidPage(
             option_to_add("linetype")),
 
           conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
-            option_to_add("largeur"))
+            option_to_add("largeur")),
+          
+          conditionalPanel("(output.var1_type !== 'factor' & !input.presence_var2 & !input.disc_var1) || input.presence_var2 & output.var2_type !=='factor'",
+                           checkboxInput("stat_mean", "Moyenne"),
+                           fluidRow(
+                             column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
+                             column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))), 
+          
+          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
+                           checkboxInput("trend_line", "Ligne de tendance")),
+          
+          conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
+                           option_to_add("stat"))
 
         ) # Fin de Options du graph
        ), # Fin de sidebar
