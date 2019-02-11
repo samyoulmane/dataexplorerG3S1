@@ -43,11 +43,10 @@ shinyUI(fluidPage(
           checkboxInput("coordflip", "Inverser les axes"),
           
           conditionalPanel("output.var1_type !== 'factor' & !input.presence_var2 || output.var2_type !=='factor'",
-          checkboxInput("stat_mean", "Moyenne")),
-          
-          fluidRow(
-            column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
-            column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01))),
+            checkboxInput("stat_mean", "Moyenne"),
+            fluidRow(
+              column(6, numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01)),
+              column(6, numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))),
           
           conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
                            checkboxInput("trend_line", "Ligne de tendance")),
