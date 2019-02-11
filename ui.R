@@ -41,9 +41,14 @@ shinyUI(fluidPage(
             option_to_add("kernel")),
           
           checkboxInput("coordflip", "Inverser les axes"),
+        
+          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
+                           checkboxInput("trend_line", "Ligne de tendance")),
+        
+          conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
+                           option_to_add("stat")),
           
-          option_to_add("theme"),
-          
+
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
             selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri)),
           
@@ -64,13 +69,9 @@ shinyUI(fluidPage(
 
           conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
             option_to_add("largeur")),
+        
+          option_to_add("theme")
 
-          
-          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
-                           checkboxInput("trend_line", "Ligne de tendance")),
-          
-          conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
-                           option_to_add("stat"))
 
          # Fin de Options du graph
        ), # Fin de sidebar
