@@ -8,7 +8,11 @@ shinyUI(fluidPage(
   hr(),
   conditionalPanel("output.confirmation == ''", # Ecran d'accueil (importation de fichier) ####
     wellPanel(style = "text-align:center; width: 50%; margin: auto; margin-top: 15%;",
-      fileInput(inputId = "file_be", accept ="text/csv", label = "Veuillez importer un jeu de données", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
+      fileInput(inputId = "file_be", 
+                accept ="text/csv", 
+                label = "Veuillez importer un jeu de données", 
+                buttonLabel = "Parcourir...", 
+                placeholder = "Pas de fichier selectionné"),
       actionButton("button", "Utiliser le dataset par défaut")
     )
   ),
@@ -18,9 +22,15 @@ shinyUI(fluidPage(
                    
       sidebarPanel(width = 3,
                    
-        fileInput("file_af", accept ="text/csv", label = "Importer un autre fichier", buttonLabel = "Parcourir...", placeholder = "Pas de fichier selectionné"),
+        fileInput("file_af", 
+                  accept ="text/csv", 
+                  label = "Importer un autre fichier", 
+                  buttonLabel = "Parcourir...", 
+                  placeholder = "Pas de fichier selectionné"),
         
-        selectInput("gtype", "Type de graph", choices = types_onevar, selected = "geom_bar"),
+        selectInput("gtype", "Type de graph", 
+                    choices = types_onevar, 
+                    selected = "geom_bar"),
         
         conditionalPanel("input.gtype == 'geom_bar' || input.gtype == 'geom_histogram'",
           checkboxInput("percent", "Pourcentages")),
@@ -33,8 +43,18 @@ shinyUI(fluidPage(
           checkboxInput("coordflip", "Inverser les axes"),
           
           conditionalPanel("output.var1_type !== 'factor' & !input.presence_var2 || output.var2_type !=='factor'",
-          checkboxInput("stat_mean", "Moyenne"),
-          numericInput("perc", "Percentile", NULL, min=0, max=1, step = 0.01)),
+          checkboxInput("stat_mean", "Moyenne")),
+          
+          # fluidRow(
+          #   column(6,
+          #     wellPanel(
+          #       numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01))),
+          #   column(6,
+              # wellPanel(
+          #     numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01)))
+          # ),
+          div(numericInput("perc1", "Percentile 1", NULL, min=0, max=1, step = 0.01),  style="display:inline-block"),
+          div(numericInput("perc2", "Percentile 2", NULL, min=0, max=1, step = 0.01),  style="display:inline-block"),
           
           conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
                            checkboxInput("trend_line", "Ligne de tendance")),
