@@ -94,16 +94,19 @@ Dans la barre latérale, il est paussible de modifier les options d'affichage su
 - **Kernel** : permet de modifier le type de distribution d'un graphique en densité (gaussienne par défaut).
 - **Theme** : permet de modifier le thème du graphique . Nous avons limiter le choix à quatre thèmes : minimal, sans quadrillage, léger et marqué.
 - **Transparence** : permet de modifier la transparence/opacité de certains éléments du graphique (colonnes, cercles, boxplot...). Par défaut à 1.
-- **Angle**
+- **Angle** : pour ajuster l'angme d'inclinaison des étiquettes des abscisses. Fixer à 45° par défaut pour permettre l'affichage des étiquettes longues qui pourraient se supperposer.
 - **Linetype** : permet de modifier le type de trait sur certains graphiques (pointillés, trait plain etc.)
 - **Ligne de tendence** : permet d'afficher une ligne de tendence sur graphique quand les deux variables sont continues
-- **
+- **Moyenne** : afficher une ligne au niveau de la moyenne de la variable en abscisse pour un graphique à une variable numérique ou au niveau de la moyenne de la variable en ordonnées pour un graphique à deux variables.
+- **Percentiles 1 et 2** : pour afficher une ligne au niveau d'un percentile donné.
+- **Largeur** : pour régler la largeur des colonnes ou des boites à moustaches.
+- **Tri des abscisses** : pour choisir la valeur qui sera calculée pour les graphiques en colonne et en fonction de laquelle les colonnes ou les boites à moustaches seront ordonnées.
 
 ## Production des tableaux
 
 Nous avons décidé de produire deux tableaux, accessibles via des onglets :
 
-- un tableau "Résumé des variables", produit avec le package `desctable`, qui dresse la liste des variables du jeu de données accompagnées de statistiques les concernant.
+- un tableau "Résumé des variables", produit avec le package `desctable`, qui dresse la liste des variables du jeu de données accompagnées de statistiques les concernant. Les nombres ont été arrondis à 3 chiffres après la virgule par défaut.
 - un tableau "Données" qui présente le jeu de données à l'état brut, avec la possibilité de filtrer les colonnes selon une valeur et de rechercher une valeur dans le jeu de données.
 
 ## Aperçu de l'application
