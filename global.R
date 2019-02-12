@@ -31,7 +31,7 @@ options_slider <- c("Transparence", "size", "Angle", "largeur")
 options_graph <- c("stat = graph_stat(), alpha = input$Transparence")
 
 # Vecteur avec les fonctions de tri
-fonctions_tri <- c("Moyenne" = "mean", "Mediane" = "median")
+fonctions_tri <- c("Moyenne" = "mean", "Mediane" = "median", "Ordre du jeu de données"="defaultx")
 
 # Fonctions ####
 
