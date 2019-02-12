@@ -48,17 +48,19 @@ shinyServer(function(input, output, session) {
   }
   
   # Agrégation des données en fonction de la moyenne ou de la médiane
-  fct_tri <- function(x, fct) {
-    switch(fct,
+  fct_tri <- function(x, fct="mean") {
+    # if (input$fct_tri != 'defaultx') {
+      switch(fct,
       "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
       "median" = summarise(x, "median" = median(!!sym(input$var2)))
-    )
+      )
+    # } else {return(FALSE)}
   }
   
   # Données triée à utiliser pour les aes
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
-    if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1)) {
+    if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1) & input$fct_tri != 'defaultx') {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
@@ -68,7 +70,7 @@ shinyServer(function(input, output, session) {
         select(!!input$fct_tri, var1_label) %>%
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
-    } else if (gtype == "geom_col" & input$var3 != input$var1) {
+    } else if (gtype == "geom_col" & input$var3 != input$var1 & input$fct_tri != 'defaultx') {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1), !!sym(input$var3)) %>%
@@ -155,11 +157,9 @@ shinyServer(function(input, output, session) {
         paste0("theme_", input$theme,"()") %>% parse(text=.) %>% eval() +
         theme(axis.text.x = element_text(angle = input$Angle))
       if(input$percent) {
-        g <- g +
-          labs(x=str_to_title(input$var1), y="%")
+        g <- g + labs(x=str_to_title(input$var1), y="%")
       } else {
-        g <- g +
-          labs(x=str_to_title(input$var1))
+        g <- g + labs(x=str_to_title(input$var1))
       }
       if (input$coordflip) {
         g <- g + coord_flip()
@@ -219,6 +219,12 @@ shinyServer(function(input, output, session) {
         } else {
           g <- g + aes_string(fill = input$var3)
         }
+      }
+      if (input$log_var1) {
+        g <- g + scale_x_log10()
+      }
+      if (input$log_var2) {
+        g <- g + scale_y_log10()
       }
       if (input$coordflip) { # Pour inverser les axes
         g <- g + coord_flip()

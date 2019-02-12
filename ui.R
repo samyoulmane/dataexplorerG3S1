@@ -64,7 +64,7 @@ shinyUI(fluidPage(
           conditionalPanel("output.var1_type == 'factor'",
             option_to_add("Angle")),
           
-          conditionalPanel("input.disc_var1 == false & input.gtype !=='geom_smooth'",
+          conditionalPanel("input.gtype == 'geom_line' || input.gtype =='geom_density'",
             option_to_add("linetype")),
 
           conditionalPanel("input.gtype == 'geom_col' || input.gtype == 'geom_bar' || input.gtype == 'geom_boxplot'",
@@ -79,7 +79,9 @@ shinyUI(fluidPage(
                            
           column(width = 4, 
             selectInput("var1", "Variable 1 - X", c()),
-            checkboxInput("disc_var1", "Discrète")
+            checkboxInput("disc_var1", "Discrète"),
+            conditionalPanel("!input.disc_var1 & input.presence_var2",
+                             checkboxInput("log_var1", "Logarithmique"))
           ), # fin de variable 1
 
           column(id = "blockswitcher", width = 1,
@@ -91,7 +93,9 @@ shinyUI(fluidPage(
           column(width = 4,checkboxInput("presence_var2", "Variable 2 - Y", value = F),
             conditionalPanel("input.presence_var2 == true",
               selectInput(inputId = "var2", NULL, c()),
-              checkboxInput("disc_var2", "Discrète")
+              checkboxInput("disc_var2", "Discrète"),
+              conditionalPanel("!input.disc_var2",
+                checkboxInput("log_var2", "Logarithmique"))
             )
           ), # fin de variable 2
 
