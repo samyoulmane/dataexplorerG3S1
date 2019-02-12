@@ -116,8 +116,8 @@ shinyServer(function(input, output, session) {
       inFile <- input$file_be
       if (is.null(inFile)) {
         return(mpg) # Affichage d'un jeu de données de démonstration au cas où
-      } else {read.csv(inFile$datapath)}
-    } else {read.csv(inFile$datapath)}
+      } else {na.omit(read.csv(inFile$datapath))}
+    } else {na.omit(read.csv(inFile$datapath))}
   })
   
   # Variables réactives ####
