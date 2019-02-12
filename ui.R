@@ -84,7 +84,7 @@ shinyUI(fluidPage(
 
           column(id = "blockswitcher", width = 1,
             conditionalPanel("input.presence_var2 == true",
-              actionButton("switcher", "", icon("exchange-alt"))
+              actionButton("switcher", "", icon("exchange"))
             )
           ), # fin du switcher
 

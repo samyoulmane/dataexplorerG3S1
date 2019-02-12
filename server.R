@@ -13,7 +13,7 @@ shinyServer(function(input, output, session) {
       vari <- eval(to_eval_text(c("input$", variable)))
       req(vari)
       if (variable == "var3" & input$gtype == "geom_col" & input$var3 != input$var1) {
-        # Parce que dans ce cas, il une agrégation qui est faite donc pour pouvoir utiliser var3() il faut l'adapter à data_to_use
+        # Parce que dans ce cas, il y a  une agrégation qui est faite donc pour pouvoir utiliser var3() il faut l'adapter à data_to_use
         data_set <- data_to_use()
         return(eval(to_eval_text(c("data_set$", vari))))
       } else {
@@ -321,7 +321,7 @@ shinyServer(function(input, output, session) {
                                        "Min"    = is.factor ~ NA | min,
                                        "Max"    = is.factor ~ NA | max)) %>% 
                 as.data.frame(), filter = 'top') %>% 
-      formatRound(columns=c("%/Mean", "sd", "Med", "Min", "Max"), digits=3)
+      formatRound(columns=c("%/Mean", "sd", "Med", "IQR", "Min", "Max"), digits=3)
   })
   
   # –– Table de données ####
