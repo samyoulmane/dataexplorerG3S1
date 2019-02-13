@@ -49,18 +49,23 @@ shinyServer(function(input, output, session) {
   
   # Agrégation des données en fonction de la moyenne ou de la médiane
   fct_tri <- function(x, fct="mean") {
-    # if (input$fct_tri != 'defaultx') {
-      switch(fct,
-      "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
-      "median" = summarise(x, "median" = median(!!sym(input$var2)))
-      )
-    # } else {return(FALSE)}
+    switch(fct,
+    "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
+    "median" = summarise(x, "median" = median(!!sym(input$var2))),
+    "sum" = summarise(x, "sum" = sum(!!sym(input$var2)))
+    )
   }
   
   # Données triée à utiliser pour les aes
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
-    if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1) & input$fct_tri != 'defaultx') {
+    if (input$no_order) {
+      data_set <- data_set()
+      data_to_use <- data_set %>% 
+        group_by(!!sym(input$var1)) %>%
+        fct_tri(input$fct_tri) %>%
+        `colnames<-`(., c(input$var1, input$var2))
+    } else if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1)) {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
@@ -70,7 +75,7 @@ shinyServer(function(input, output, session) {
         select(!!input$fct_tri, var1_label) %>%
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
-    } else if (gtype == "geom_col" & input$var3 != input$var1 & input$fct_tri != 'defaultx') {
+    } else if (gtype == "geom_col" & input$var3 != input$var1) {
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1), !!sym(input$var3)) %>%
@@ -118,8 +123,8 @@ shinyServer(function(input, output, session) {
       inFile <- input$file_be
       if (is.null(inFile)) {
         return(mpg) # Affichage d'un jeu de données de démonstration au cas où
-      } else {na.omit(read.csv(inFile$datapath))}
-    } else {na.omit(read.csv(inFile$datapath))}
+      } else {read.csv(inFile$datapath)}
+    } else {read.csv(inFile$datapath)}
   })
   
   # Variables réactives ####
@@ -232,6 +237,9 @@ shinyServer(function(input, output, session) {
       if (input$trend_line & input$gtype != "geom_smooth") {
         g <- g + geom_smooth() # Pour ajouter une ligne de tendence
       }
+      if (input$add_line & input$gtype == "geom_point") {
+        g <- g + geom_line() # Pour ajouter une ligne
+      }
       if (is.numeric(var2())|is.integer(var2())) {
         if (input$stat_mean) {
           g <- g + geom_hline(yintercept=mean(var2(), na.rm=T), 
@@ -265,12 +273,17 @@ shinyServer(function(input, output, session) {
     })
   
   # ––– Changement du type de graphique en fonction du type des variables 1 et 2 ####
-  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2, input$presence_var2),{
+  observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2, input$presence_var2, input$no_order),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if ((input$disc_var1 == T | is.factor(var1()) | is.character(var1())) & input$disc_var2 == F) {
       updateSelectInput(session, "gtype", selected = "geom_col")
+      if (input$no_order) {
+        updateSelectInput(session, "gtype", selected = "geom_point")
+      } else {
+        updateSelectInput(session, "gtype", selected = "geom_col")
+      }
     } else if (input$disc_var1 == T & input$disc_var2 == T) {
       updateSelectInput(session, "gtype", selected = "geom_count")
     } else if (input$disc_var1 == F & input$disc_var2 == T) {

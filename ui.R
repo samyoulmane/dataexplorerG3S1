@@ -41,14 +41,18 @@ shinyUI(fluidPage(
           
           checkboxInput("coordflip", "Inverser les axes"),
         
-          conditionalPanel("input.presence_var2 & !input.disc_var1 & input.gtype !=='geom_smooth'",
+          conditionalPanel("input.presence_var2 & (!input.disc_var1 || input.gtype =='geom_point') & input.gtype !=='geom_smooth'",
                            checkboxInput("trend_line", "Ligne de tendance")),
+        
+          conditionalPanel("input.presence_var2 & input.gtype =='geom_point'",
+                         checkboxInput("add_line", "Ajouter une ligne")),
         
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                            option_to_add("stat")),
           
           conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
-            selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri)),
+            selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri),
+            checkboxInput("no_order", "Ne pas trier (calculer la valeur seulement)")),
           
           conditionalPanel("(output.var1_type !== 'factor' & !input.presence_var2 & !input.disc_var1) || input.presence_var2 & output.var2_type !=='factor'",
                            checkboxInput("stat_mean", "Moyenne"),
