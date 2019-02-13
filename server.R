@@ -311,6 +311,7 @@ shinyServer(function(input, output, session) {
       updateSliderInput(session, inputId = "Angle", value = 45)
     }
     updateCheckboxInput(session, inputId = "log_var1", value = F)
+    updateCheckboxInput(session, inputId = "no_order", value = F)
   })
   observeEvent(input$var2, {
     if(typeof(var2()) == "integer") {
@@ -318,11 +319,13 @@ shinyServer(function(input, output, session) {
     } else if(typeof(var2()) == "double") {
       updateCheckboxInput(session, inputId = "disc_var2", value = F)}
     updateCheckboxInput(session, inputId = "log_var2", value = F)
+    updateCheckboxInput(session, inputId = "no_order", value = F)
   })
   observeEvent(input$gtype, {
     if (input$gtype %in% types_onevar$`Variable continue`) {
       updateSelectInput(session, "stat", choices = c('bin', 'count'))
     }
+    updateCheckboxInput(session, inputId = "trend_line", value = F)
   })
   observeEvent(input$presence_var2, {
     if (input$presence_var2) {updateSelectInput(session, inputId = "gtype", choices = types_morevar)}
