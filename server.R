@@ -49,6 +49,7 @@ shinyServer(function(input, output, session) {
   
   # Agrégation des données en fonction de la moyenne ou de la médiane
   fct_tri <- function(x, fct="mean") {
+    req(input$var2)
     switch(fct,
     "mean" = summarise(x, "mean" = mean(!!sym(input$var2))),
     "median" = summarise(x, "median" = median(!!sym(input$var2))),
@@ -60,12 +61,14 @@ shinyServer(function(input, output, session) {
   data_to_use <- function(gtype = input$gtype) {
     req(input$var1)
     if (input$no_order) {
+      req(input$var2)
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
         fct_tri(input$fct_tri) %>%
         `colnames<-`(., c(input$var1, input$var2))
     } else if (gtype == "geom_col" & (!input$presence_var3 | input$var3 == input$var1)) {
+      req(input$var2)
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1)) %>%
@@ -76,6 +79,7 @@ shinyServer(function(input, output, session) {
         `colnames<-`(., c(input$var2, input$var1))
       return(data_to_use)
     } else if (gtype == "geom_col" & input$var3 != input$var1) {
+      req(input$var3)
       data_set <- data_set()
       data_to_use <- data_set %>% 
         group_by(!!sym(input$var1), !!sym(input$var3)) %>%
@@ -90,6 +94,7 @@ shinyServer(function(input, output, session) {
   
   # Retourne les abscisses ordonnées
   graph_aes <- function (x, Xdisc = F, func = length) {
+    req(input$var1)
     if (is.character(x)|Xdisc|is.factor(x)) {
       x <- reorder(x = x, X = x, FUN=func)
       return(aes(x=x))
@@ -100,6 +105,7 @@ shinyServer(function(input, output, session) {
   
   # Pour le tri des abscisses dans un graphique à boites à moustaches
   aes_to_use <- function (a = input$disc_var1, b = input$disc_var2, g = input$gtype) {
+    req(input$var1, input$var2)
     if (a & !b & g!='geom_boxplot') {
       data_set <- data_to_use()
       ggplot(data = data_set) +
@@ -118,13 +124,13 @@ shinyServer(function(input, output, session) {
   
   # Importation du jeu de données ####
   data_set <- reactive({
-    inFile <- input$file_af
-    if (is.null(inFile)) {
+    # inFile <- input$file_af
+    # if (is.null(inFile)) {
       inFile <- input$file_be
-      if (is.null(inFile)) {
-        return(mpg) # Affichage d'un jeu de données de démonstration au cas où
-      } else {read.csv(inFile$datapath)}
-    } else {read.csv(inFile$datapath)}
+      if (!is.null(inFile)) {
+        read.csv(inFile$datapath) # Affichage d'un jeu de données de démonstration au cas où
+      } else {return(NULL)}
+    # } else {read.csv(inFile$datapath)}
   })
   
   # Variables réactives ####
@@ -188,6 +194,7 @@ shinyServer(function(input, output, session) {
   
   # ––– Changement du type de graphique en fonction du type de la variable 1 ####
   observe({
+    req(input$var1)
     if (!input$presence_var2) { # Si la deuxième variable n'est pas là :
       updateSelectInput(session, inputId = "gtype", choices = types_onevar)
       if(input$disc_var1) {
@@ -208,16 +215,16 @@ shinyServer(function(input, output, session) {
   # –– Graphique à deux variables ####
   output$graph2 <- renderPlotly({
     if (input$presence_var2) {
+      req(input$var1, input$var2, cancelOutput = T)
       data_set <- data_set()
       data_to_use <- data_to_use()
-      req(input$var1, input$var2, cancelOutput = T)
       g <- aes_to_use() +
         graph_type(type = input$gtype, disc_var1 = input$disc_var1) %>% parse(text=.) %>% eval() +
         paste0("theme_", input$theme, "()") %>% parse(text=.) %>% eval() +
         labs(x=str_to_title(input$var1), y=str_to_title(input$var2)) +
         theme(axis.text.x = element_text(angle = input$Angle))
       if (input$presence_var3) {
-        req(input$var3)
+        req(input$var3, cancelOutput = T)
         if (input$disc_var3) { # Pour prendre en compte var3
           g <- g + aes(fill = factor(var3())) + 
             scale_fill_discrete(name = input$var3) # Pour renommer l'étiquette de var3
@@ -276,9 +283,9 @@ shinyServer(function(input, output, session) {
   observeEvent(c(input$var1, input$var2, input$switcher, input$disc_var1, input$disc_var2, input$presence_var2, input$no_order),{
     req(input$var1, input$var2, input$presence_var2)
     if (input$disc_var1 == F  & !is.factor(var1()) & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_smooth")
+      updateSelectInput(session, "gtype", selected = "geom_jitter")
     } else if ((input$disc_var1 == T | is.factor(var1()) | is.character(var1())) & input$disc_var2 == F) {
-      updateSelectInput(session, "gtype", selected = "geom_col")
+      updateSelectInput(session, "gtype", selected = "geom_boxplot")
       if (input$no_order) {
         updateSelectInput(session, "gtype", selected = "geom_point")
       } else {
@@ -302,6 +309,7 @@ shinyServer(function(input, output, session) {
   
   # Changements en fonction d'événements particuliers
   observeEvent(input$var1, {
+    req(input$var1)
     if(typeof(var1()) %in% c("integer", "double")) {
       updateCheckboxInput(session, inputId = "disc_var1", value = F)
       updateSliderInput(session, inputId = "Angle", value = 0)
@@ -314,6 +322,7 @@ shinyServer(function(input, output, session) {
     updateCheckboxInput(session, inputId = "no_order", value = F)
   })
   observeEvent(input$var2, {
+    req(input$var2)
     if(typeof(var2()) == "integer") {
       updateCheckboxInput(session, inputId = "disc_var2", value = F)
     } else if(typeof(var2()) == "double") {
@@ -326,6 +335,7 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, "stat", choices = c('bin', 'count'))
     }
     updateCheckboxInput(session, inputId = "trend_line", value = F)
+    updateCheckboxInput(session, inputId = "percent", value = F)
   })
   observeEvent(input$presence_var2, {
     if (input$presence_var2) {updateSelectInput(session, inputId = "gtype", choices = types_morevar)}
@@ -359,6 +369,7 @@ shinyServer(function(input, output, session) {
   })
   
   outputOptions(output, "confirmation", suspendWhenHidden = FALSE)
+  
   output$data_table <- renderDataTable({
     DT::datatable(data_set(), filter = 'top')
   })

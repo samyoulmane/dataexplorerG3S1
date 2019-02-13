@@ -21,11 +21,11 @@ shinyUI(fluidPage(
                    
       sidebarPanel(width = 3,
                    
-        fileInput("file_af", 
-                  accept ="text/csv", 
-                  label = "Importer un autre fichier", 
-                  buttonLabel = "Parcourir...", 
-                  placeholder = "Pas de fichier selectionné"),
+        # fileInput("file_af", 
+        #           accept ="text/csv", 
+        #           label = "Importer un autre fichier", 
+        #           buttonLabel = "Parcourir...", 
+        #           placeholder = "Pas de fichier selectionné"),
         
         selectInput("gtype", "Type de graphique", 
                     choices = types_onevar, 
@@ -118,11 +118,11 @@ shinyUI(fluidPage(
         # – Outputs ####
 
         conditionalPanel("input.presence_var2 == false",
-          plotlyOutput("graph1", height = "490px")
+          plotlyOutput("graph1", height = "520px")
         ),
 
         conditionalPanel("input.presence_var2 == true",
-          plotlyOutput("graph2", height = "490px")
+          plotlyOutput("graph2", height = "520px")
         ),
         
         br(),
