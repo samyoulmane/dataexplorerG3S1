@@ -45,12 +45,12 @@ shinyUI(fluidPage(
                            checkboxInput("trend_line", "Ligne de tendance")),
         
           conditionalPanel("input.presence_var2 & input.gtype =='geom_point'",
-                         checkboxInput("add_line", "Ajouter une ligne")),
+                         checkboxInput("add_line", "Relier les points")),
         
           conditionalPanel("input.gtype == 'geom_freqpoly' || input.gtype == 'geom_area'",
                            option_to_add("stat")),
           
-          conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true", 
+          conditionalPanel("input.disc_var1 == true & input.disc_var2 == false & input.presence_var2 == true & input.presence_var3 == false", 
             selectInput("fct_tri", "Trier les abscisses en fonction de", choices = fonctions_tri),
             checkboxInput("no_order", "Ne pas trier (calculer la valeur seulement)")),
           
@@ -118,11 +118,11 @@ shinyUI(fluidPage(
         # – Outputs ####
 
         conditionalPanel("input.presence_var2 == false",
-          plotlyOutput("graph1", height = "510px")
+          plotlyOutput("graph1", height = "490px")
         ),
 
         conditionalPanel("input.presence_var2 == true",
-          plotlyOutput("graph2", height = "510px")
+          plotlyOutput("graph2", height = "490px")
         ),
         
         br(),
